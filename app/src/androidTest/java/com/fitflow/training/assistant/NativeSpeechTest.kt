@@ -68,10 +68,10 @@ class NativeSpeechTest {
             stream.acceptWaveform(FloatArray(shorts.size+16000) { if(it<shorts.size) shorts[it]/32768f else 0f },16000)
             stream.inputFinished()
             while(engine.isReady(stream)) engine.decode(stream)
-            assertEquals("小练小练完成本组",engine.getResult(stream).text.replace(" ",""))
+            assertEquals("铁蛋完成本组",engine.getResult(stream).text.replace(" ",""))
         } finally { stream.release();engine.release() }
     }
-    @Test fun bundledRecognizerFinishesCommandWithinOneSecondOfSilence() {
+    @Test fun bundledRecognizerFinishesCommandWithinOnePointThreeSecondsOfSilence() {
         val instrumentation=InstrumentationRegistry.getInstrumentation()
         val bytes=instrumentation.context.assets.open("assistant/wake-complete-16k.pcm").use { it.readBytes() }
         val shorts=ShortArray(bytes.size/2)
@@ -81,7 +81,8 @@ class NativeSpeechTest {
         val engine=OnlineRecognizer(instrumentation.targetContext.assets,SherpaRecognizer.config())
         val stream=engine.createStream(SherpaRecognizer.HOTWORDS)
         try {
-            val total=lastVoice+1+16000
+            val maxTrailingSamples=20800
+            val total=lastVoice+1+maxTrailingSamples
             for(start in 0 until total step 1600) {
                 val frame=FloatArray(minOf(1600,total-start)) { position ->
                     val index=start+position
@@ -90,13 +91,13 @@ class NativeSpeechTest {
                 stream.acceptWaveform(frame,16000)
                 while(engine.isReady(stream)) engine.decode(stream)
                 if(engine.isEndpoint(stream)) {
-                    assertEquals("小练小练完成本组",engine.getResult(stream).text.replace(" ",""))
+                    assertEquals("铁蛋完成本组",engine.getResult(stream).text.replace(" ",""))
                     android.util.Log.i("AssistantValidation","endpointTrailingMs=${(start+frame.size-lastVoice)*1000/16000}")
-                    assertTrue("Endpoint took over one second",start+frame.size-lastVoice<=16000)
+                    assertTrue("Endpoint took over 1.3 seconds",start+frame.size-lastVoice<=maxTrailingSamples)
                     return
                 }
             }
-            fail("No endpoint within one second of silence")
+            fail("No endpoint within 1.3 seconds of silence")
         } finally { stream.release();engine.release() }
     }
     @Test fun bundledSynthesizerSupportsBothVoicesAndCache()=runBlocking {

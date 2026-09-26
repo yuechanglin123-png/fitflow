@@ -15,4 +15,11 @@ class AssistantWakeReplyFilterTest {
         assertEquals("完成本组", AssistantWakeReplyFilter.userText("我在请说指令完成本组"))
         assertEquals("跳过休息", AssistantWakeReplyFilter.userText("跳过休息"))
     }
+
+    @Test fun ignoresTrailingFragmentsOfItsOwnReply() {
+        assertNull(AssistantWakeReplyFilter.userText("说指令"))
+        assertNull(AssistantWakeReplyFilter.userText("指令"))
+        assertNull(AssistantWakeReplyFilter.userText("令"))
+        assertEquals("完成本组", AssistantWakeReplyFilter.userText("说指令完成本组"))
+    }
 }

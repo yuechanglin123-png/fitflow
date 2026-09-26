@@ -6,7 +6,6 @@ outside the Git worktree. Only aggregate results may be copied into docs.
 
 import argparse
 import json
-import re
 import time
 import unicodedata
 import wave
@@ -17,9 +16,16 @@ from pathlib import Path
 COMMANDS = {
     "跳过休息": "SKIP_REST", "结束休息": "SKIP_REST",
     "完成本组": "COMPLETE_SET", "本组完成": "COMPLETE_SET", "这组完成了": "COMPLETE_SET",
+    "完成这一组": "COMPLETE_SET", "这一组做完了": "COMPLETE_SET", "这组做完了": "COMPLETE_SET",
+    "本组做完了": "COMPLETE_SET",
     "延长三十秒": "EXTEND_REST_30", "延长30秒": "EXTEND_REST_30",
     "延长三十秒休息时间": "EXTEND_REST_30", "延长30秒休息时间": "EXTEND_REST_30",
-    "暂停训练": "PAUSE", "暂停锻炼": "PAUSE",
+    "延长三十秒休息": "EXTEND_REST_30", "延长30秒休息": "EXTEND_REST_30",
+    "延长休息三十秒": "EXTEND_REST_30", "延长休息30秒": "EXTEND_REST_30",
+    "加三十秒": "EXTEND_REST_30", "加30秒": "EXTEND_REST_30",
+    "休息加三十秒": "EXTEND_REST_30", "休息加30秒": "EXTEND_REST_30",
+    "再休息三十秒": "EXTEND_REST_30", "再休息30秒": "EXTEND_REST_30",
+    "暂停训练": "PAUSE", "暂停锻炼": "PAUSE", "暂停一下训练": "PAUSE", "暂停一下锻炼": "PAUSE",
 }
 EXPECTED = set(COMMANDS.values()) | {"WAKE", "NO_ACTION"}
 COMMON_HOTWORDS = ("跳过休息/延长三十秒休息时间/暂停训练/完成本组/现在练什么/今天天气/北京/上海"
@@ -45,8 +51,11 @@ def classify(text: str, awake: bool = False) -> str:
             return "WAKE"
     elif not awake:
         return "NO_ACTION"
-    clean = re.sub(r"^(请问|请|麻烦|帮我)", "", clean)
-    clean = re.sub(r"(吧|一下)$", "", clean)
+    for prefix in ("请问", "请", "麻烦", "帮我"):
+        clean = clean.removeprefix(prefix)
+    for suffix in ("吧", "一下"):
+        if clean.endswith(suffix):
+            clean = clean[: -len(suffix)]
     return COMMANDS.get(clean, "NO_ACTION")
 
 
@@ -55,10 +64,10 @@ def validate_manifest(rows: list[dict]) -> None:
         raise ValueError("empty manifest")
     speakers: dict[str, set[str]] = defaultdict(set)
     for row in rows:
-        for key in ("audio", "speaker", "environment", "transcript", "expectedIntent", "split", "startSecond", "endSecond"):
+        for key in ("audio", "speaker", "environment", "transcript", "expectedIntent", "split", "awake", "startSecond", "endSecond"):
             if key not in row:
                 raise ValueError(f"missing {key}")
-        if row["split"] not in {"train", "validation"} or row["expectedIntent"] not in EXPECTED:
+        if row["split"] not in {"train", "validation"} or row["expectedIntent"] not in EXPECTED or not isinstance(row["awake"], bool):
             raise ValueError("invalid split or expectedIntent")
         if not 0 <= row["startSecond"] < row["endSecond"]:
             raise ValueError("invalid audio interval")
@@ -73,8 +82,8 @@ def summarize(rows: list[dict]) -> dict:
         selected = [row for row in rows if row["split"] == split]
         result[split] = {
             "total": len(selected),
-            "correct": sum(row["expectedIntent"] == classify(row["recognized"], row["expectedIntent"] not in {"WAKE", "NO_ACTION"}) for row in selected),
-            "falseOperations": sum(row["expectedIntent"] == "NO_ACTION" and classify(row["recognized"]) in set(COMMANDS.values()) for row in selected),
+            "correct": sum(row["expectedIntent"] == classify(row["recognized"], row["awake"]) for row in selected),
+            "falseOperations": sum(row["expectedIntent"] == "NO_ACTION" and classify(row["recognized"], row["awake"]) in set(COMMANDS.values()) for row in selected),
             "recognitionSeconds": round(sum(row.get("recognitionSeconds", 0) for row in selected), 3),
         }
     return result
