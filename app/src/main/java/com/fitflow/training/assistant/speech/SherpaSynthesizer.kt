@@ -70,7 +70,7 @@ class SherpaSynthesizer(private val context:Context):SpeechSynthesizerAdapter {
                         } catch(error:Throwable) { audioFailure=error; 0 }
                     }
                     val spoken=if(text.endsWith('。')||text.endsWith('！')||text.endsWith('？')) text else "$text。"
-                    checkNotNull(engine).generateWithCallback(spoken,if(voice==VoiceChoice.MALE) 58 else 3,0.92f,callback)
+                    checkNotNull(engine).generateWithCallback(spoken,if(voice==VoiceChoice.MALE) 58 else 3,SPEECH_SPEED,callback)
                 }
                 audioFailure?.let { throw it }
                 if(epoch==generation.get()&&!closed) output(ShortArray(4800))
@@ -92,6 +92,7 @@ class SherpaSynthesizer(private val context:Context):SpeechSynthesizerAdapter {
         executor.shutdown()
     }
     companion object {
+        const val SPEECH_SPEED=1.0f
         /** Only frontend dictionaries need real paths. Large weights are read directly from the APK. */
         suspend fun prepareConfig(context:Context):OfflineTtsConfig=withContext(Dispatchers.IO) {
             val assets="assistant/tts"

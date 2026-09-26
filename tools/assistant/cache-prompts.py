@@ -33,7 +33,8 @@ for voice,sid in [('male',58),('female',3)]:
             continue
         path=a.output/f'{voice}-{name}.pcm'
         spoken=text if text.endswith(('。','！','？')) else text+'。'
-        audio=tts.generate(spoken,sid=sid,speed=0.92)
+        # This one very short confirmation loses its final syllable when rushed.
+        audio=tts.generate(spoken,sid=sid,speed=0.95 if name=='pause' else 1.0)
         assert audio.sample_rate==24000
         (np.clip(audio.samples,-1,1)*32767).astype('<i2').tofile(path)
         generated+=1
