@@ -12,7 +12,7 @@ sealed interface AssistantIntent {
 data class SpeechResult(val turnId: Long, val text: String, val isFinal: Boolean)
 interface SpeechRecognizerAdapter {
     suspend fun initialize()
-    fun start(onResult: (SpeechResult) -> Unit, onError: (String) -> Unit)
+    fun start(onResult: (SpeechResult) -> Unit, onError: (String) -> Unit, onReady: () -> Unit)
     fun stop()
     fun close()
 }

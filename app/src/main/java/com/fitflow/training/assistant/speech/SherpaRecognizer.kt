@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.media.*
+import android.media.audiofx.AcousticEchoCanceler
 import androidx.core.content.ContextCompat
 import com.fitflow.training.assistant.*
 import com.k2fsa.sherpa.onnx.*
@@ -30,7 +31,7 @@ class SherpaRecognizer(private val context:Context):SpeechRecognizerAdapter {
     }
 
     @SuppressLint("MissingPermission")
-    override fun start(onResult:(SpeechResult)->Unit,onError:(String)->Unit) {
+    override fun start(onResult:(SpeechResult)->Unit,onError:(String)->Unit,onReady:()->Unit) {
         stop()
         if(closed) return
         val epoch=generation.get()
@@ -42,11 +43,15 @@ class SherpaRecognizer(private val context:Context):SpeechRecognizerAdapter {
             val recognizer=model ?: return@execute
             var stream:OnlineStream?=null
             var mic:AudioRecord?=null
+            var echoCanceler:AcousticEchoCanceler?=null
             try {
                 val minimum=AudioRecord.getMinBufferSize(16000,AudioFormat.CHANNEL_IN_MONO,AudioFormat.ENCODING_PCM_16BIT)
                 check(minimum>0)
-                mic=AudioRecord(MediaRecorder.AudioSource.VOICE_RECOGNITION,16000,AudioFormat.CHANNEL_IN_MONO,AudioFormat.ENCODING_PCM_16BIT,maxOf(minimum,6400))
+                mic=AudioRecord(MediaRecorder.AudioSource.VOICE_COMMUNICATION,16000,AudioFormat.CHANNEL_IN_MONO,AudioFormat.ENCODING_PCM_16BIT,maxOf(minimum,6400))
                 check(mic.state==AudioRecord.STATE_INITIALIZED)
+                if(AcousticEchoCanceler.isAvailable()) {
+                    echoCanceler=runCatching { AcousticEchoCanceler.create(mic.audioSessionId)?.also { it.enabled=true } }.getOrNull()
+                }
                 recording=mic
                 if(closed || epoch!=generation.get()) return@execute
                 stream=recognizer.createStream(HOTWORDS)
@@ -56,6 +61,7 @@ class SherpaRecognizer(private val context:Context):SpeechRecognizerAdapter {
                 val shorts=ShortArray(1600)
                 mic.startRecording()
                 check(mic.recordingState==AudioRecord.RECORDSTATE_RECORDING)
+                if(epoch==generation.get() && !closed) onReady()
                 while(!closed && epoch==generation.get()) {
                     val count=mic.read(shorts,0,shorts.size)
                     if(count<=0) { if(epoch==generation.get()) error("Microphone unavailable"); break }
@@ -76,6 +82,7 @@ class SherpaRecognizer(private val context:Context):SpeechRecognizerAdapter {
                 if(!closed && epoch==generation.get()) onError("麦克风不可用或语音识别失败，请重新开启助教")
             } finally {
                 if(recording===mic) recording=null
+                echoCanceler?.release()
                 runCatching { mic?.stop() }; mic?.release(); stream?.release()
             }
         }

@@ -30,6 +30,7 @@ class AssistantController(
     private var lastResult=-1L
     private var parent: Job?=null
     private var timeout: Job?=null
+    private var wakePrompt: Job?=null
     private var recognizer: SpeechRecognizerAdapter?=null
     private var synthesizer: SpeechSynthesizerAdapter?=null
     private var context: CommandContext?=null
@@ -65,6 +66,7 @@ class AssistantController(
     fun disable() {
         ++generation
         timeout?.cancel(); timeout=null
+        wakePrompt?.cancel(); wakePrompt=null
         recognizer?.stop(); synthesizer?.stop()
         recognizer=null; synthesizer=null
         parent?.cancel(); parent=null; context=null; wakeResult=null
@@ -78,7 +80,7 @@ class AssistantController(
 
     fun close()=disable()
 
-    private fun listen(g:Long, next:AssistantStage) {
+    private fun listen(g:Long, next:AssistantStage, onReady:()->Unit={}) {
         if(!valid(g)) return
         if(next==AssistantStage.WAITING) { context=null; wakeResult=null }
         else if(next==AssistantStage.LISTENING) {
@@ -88,17 +90,28 @@ class AssistantController(
         partialText=""
         val capture=++captureEpoch
         stage(next)
+        timeout?.cancel();timeout=null
         recognizer?.start({ result -> scope.launch { if(capture==captureEpoch) onResult(g,result) } }, { message ->
             scope.launch {
                 val listening=state.value.stage in listOf(AssistantStage.WAITING,AssistantStage.LISTENING)
                 if(valid(g) && capture==captureEpoch && listening) fail(message)
             }
+        }, {
+            scope.launch {
+                if(valid(g) && capture==captureEpoch && state.value.stage==next) {
+                    if(next==AssistantStage.LISTENING) startCommandTimeout(g,capture)
+                    onReady()
+                }
+            }
         })
-        timeout?.cancel()
-        if(next==AssistantStage.LISTENING) timeout=scope.launch(parent ?: return) {
+    }
+
+    private fun startCommandTimeout(g:Long, capture:Long) {
+        timeout=scope.launch(parent ?: return) {
             delay(5000)
             if(valid(g) && capture==captureEpoch && state.value.stage==AssistantStage.LISTENING) {
                 timeout=null // Do not cancel this coroutine when speak() starts the next capture.
+                stopWakePrompt()
                 if(partialText.isBlank()) listen(g,AssistantStage.WAITING)
                 else try {
                     speak(g,RETRY_PROMPT,AssistantStage.LISTENING)
@@ -114,6 +127,7 @@ class AssistantController(
         if(currentStage!=AssistantStage.WAITING && currentStage!=AssistantStage.LISTENING) return
         var text=AssistantSpeechText.normalize(result.text)
         if(text.isEmpty()) return
+        if(currentStage==AssistantStage.LISTENING) text=AssistantWakeReplyFilter.userText(text) ?: return
         if(currentStage==AssistantStage.LISTENING) partialText=text
         val afterWake=AssistantSpeechText.afterWake(text)
         if(currentStage==AssistantStage.WAITING && afterWake!=null && wakeResult!=result.turnId) {
@@ -125,8 +139,13 @@ class AssistantController(
         if(currentStage==AssistantStage.WAITING) {
             text=afterWake ?: return
         } else if(afterWake!=null) text=afterWake
+        if(currentStage==AssistantStage.WAITING && text.isEmpty()) {
+            mutableState.value=state.value.copy(heard=result.text,reply="我在，请说指令")
+            listen(g,AssistantStage.LISTENING) { startWakePrompt(g) }
+            return
+        }
         mutableState.value=state.value.copy(heard=result.text,stage=AssistantStage.PROCESSING)
-        recognizer?.stop(); timeout?.cancel()
+        recognizer?.stop(); timeout?.cancel(); stopWakePrompt()
         val commandContext=context
         val owner=parent ?: return
         scope.launch(owner) {
@@ -181,6 +200,22 @@ class AssistantController(
             try { speak(g,event.text,AssistantStage.WAITING) }
             catch(cancel:CancellationException) { throw cancel }
             catch(error:Exception) { if(valid(g)) fail("语音播报失败，请重新开启助教") }
+        }
+    }
+
+    private fun startWakePrompt(g:Long) {
+        val owner=parent ?: return
+        wakePrompt=scope.launch(owner) {
+            try { synthesizer?.speak("我在，请说指令",voice()) }
+            catch(cancel:CancellationException) { throw cancel }
+            catch(error:Exception) { if(valid(g)) fail("语音播报失败，请重新开启助教") }
+        }
+    }
+
+    private fun stopWakePrompt() {
+        if(wakePrompt!=null) {
+            wakePrompt?.cancel(); wakePrompt=null
+            synthesizer?.stop()
         }
     }
 

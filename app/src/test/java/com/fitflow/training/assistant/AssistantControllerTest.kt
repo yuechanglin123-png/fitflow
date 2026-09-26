@@ -8,37 +8,102 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class AssistantControllerTest {
-    private class Recognizer(val initialization:CompletableDeferred<Unit>?=null) : SpeechRecognizerAdapter {
+    private class Recognizer(val initialization:CompletableDeferred<Unit>?=null, val readyAutomatically:Boolean=true) : SpeechRecognizerAdapter {
         var callback: ((SpeechResult)->Unit)? = null
         var errorCallback: ((String)->Unit)? = null
+        var readyCallback: (()->Unit)? = null
         var stopped=false
         override suspend fun initialize() { initialization?.await() }
-        override fun start(onResult: (SpeechResult)->Unit, onError: (String)->Unit) { callback=onResult;errorCallback=onError; stopped=false }
+        override fun start(onResult: (SpeechResult)->Unit, onError: (String)->Unit, onReady:()->Unit) {
+            callback=onResult;errorCallback=onError;readyCallback=onReady; stopped=false
+            if(readyAutomatically) onReady()
+        }
         override fun stop() { stopped=true }
         override fun close() { stopped=true }
         fun emit(id:Long, text:String, final:Boolean=true) { callback?.invoke(SpeechResult(id,text,final)) }
     }
     private class Synth(val completion:CompletableDeferred<Unit>?=null, val retryCompletion:CompletableDeferred<Unit>?=null) : SpeechSynthesizerAdapter {
         val spoken=mutableListOf<String>()
+        var stopCalls=0
         override suspend fun initialize() {}
         override suspend fun speak(text:String, voice:VoiceChoice) {
             spoken+=text; completion?.await()
             if(text=="对不起，我没有听清，请再说一次") retryCompletion?.await()
         }
-        override fun stop() {}
+        override fun stop() { stopCalls++ }
         override fun close() {}
     }
     private val snapshot = SessionSnapshot("s", WorkoutPlan(LocalDate.of(2026,9,23), emptyList()), emptyMap(), Phase.READY,"b",null)
-    @Test fun delayedErrorFromStoppedRecordingDoesNotAbortReply()=runBlocking {
+    @Test fun wakeReplyWaitsUntilMicrophoneHasStarted()=runBlocking {
+        val r=Recognizer(readyAutomatically=false); val t=Synth()
+        val scope=CoroutineScope(SupervisorJob()+Dispatchers.Unconfined)
+        val c=AssistantController(scope,{r},{t},{snapshot},{_,_->error("No action")},{"回答"},{VoiceChoice.FEMALE})
+        try {
+            c.enable();r.readyCallback?.invoke();r.emit(1,"铁蛋")
+            assertTrue(t.spoken.isEmpty())
+            r.readyCallback?.invoke()
+            assertEquals(listOf("我在，请说指令"),t.spoken)
+        } finally { c.close();scope.cancel() }
+    }
+    @Test fun commandDuringWakeReplyIsExecutedOnce()=runBlocking {
+        val gate=CompletableDeferred<Unit>(); val r=Recognizer(); val t=Synth(gate); var count=0
+        val scope=CoroutineScope(SupervisorJob()+Dispatchers.Unconfined)
+        val c=AssistantController(scope,{r},{t},{snapshot},{_,_->count++;CommandResult(true,"完成")},{"回答"},{VoiceChoice.FEMALE})
+        try {
+            c.enable();r.emit(1,"铁蛋")
+            assertEquals(AssistantStage.LISTENING,c.state.value.stage)
+            assertFalse(r.stopped)
+            r.emit(2,"我在请说指令完成本组")
+            r.emit(2,"我在请说指令完成本组")
+            assertEquals(1,count)
+        } finally { gate.complete(Unit);c.close();scope.cancel() }
+    }
+    @Test fun echoedWakeReplyDoesNotConsumeCommandWindow()=runBlocking {
+        val gate=CompletableDeferred<Unit>(); val r=Recognizer(); val t=Synth(gate); var count=0
+        val scope=CoroutineScope(SupervisorJob()+Dispatchers.Unconfined)
+        val c=AssistantController(scope,{r},{t},{snapshot},{_,_->count++;CommandResult(true,"完成")},{"回答"},{VoiceChoice.FEMALE})
+        try {
+            c.enable();r.emit(1,"铁蛋")
+            r.emit(2,"我在请说指令")
+            assertEquals(AssistantStage.LISTENING,c.state.value.stage)
+            r.emit(3,"完成本组")
+            assertEquals(1,count)
+        } finally { gate.complete(Unit);c.close();scope.cancel() }
+    }
+    @Test fun wakeWindowExpiresFiveSecondsAfterReplyStartsEvenIfPromptIsPlaying()=runBlocking {
+        val gate=CompletableDeferred<Unit>(); val r=Recognizer(); val t=Synth(gate)
+        val scope=CoroutineScope(SupervisorJob()+Dispatchers.Unconfined)
+        val c=AssistantController(scope,{r},{t},{snapshot},{_,_->error("No action")},{"回答"},{VoiceChoice.FEMALE})
+        try {
+            c.enable();r.emit(1,"铁蛋")
+            delay(5200)
+            assertEquals(AssistantStage.WAITING,c.state.value.stage)
+            assertTrue(t.stopCalls>0)
+        } finally { gate.complete(Unit);c.close();scope.cancel() }
+    }
+    @Test fun disablingDuringWakeReplyDropsLaterInstruction()=runBlocking {
+        val gate=CompletableDeferred<Unit>(); val r=Recognizer(); val t=Synth(gate); var count=0
+        val scope=CoroutineScope(SupervisorJob()+Dispatchers.Unconfined)
+        val c=AssistantController(scope,{r},{t},{snapshot},{_,_->count++;CommandResult(true,"完成")},{"回答"},{VoiceChoice.FEMALE})
+        try {
+            c.enable();r.emit(1,"铁蛋")
+            val oldCapture=r.callback!!
+            c.disable();oldCapture(SpeechResult(2,"完成本组",true))
+            assertEquals(0,count)
+            assertTrue(t.stopCalls>0)
+            assertEquals(AssistantStage.OFF,c.state.value.stage)
+        } finally { gate.complete(Unit);c.close();scope.cancel() }
+    }
+    @Test fun delayedErrorFromPreviousWakeCaptureDoesNotAbortReply()=runBlocking {
         val gate=CompletableDeferred<Unit>(); val r=Recognizer(); val t=Synth(gate)
         val scope=CoroutineScope(SupervisorJob()+Dispatchers.Unconfined)
         val c=AssistantController(scope,{r},{t},{snapshot},{_,_->error("No command")},{"回答"},{VoiceChoice.FEMALE})
         try {
             c.enable();val oldError=r.errorCallback!!
             r.emit(1,"铁蛋")
-            assertEquals(AssistantStage.SPEAKING,c.state.value.stage)
+            assertEquals(AssistantStage.LISTENING,c.state.value.stage)
             oldError("录音已关闭")
-            assertEquals(AssistantStage.SPEAKING,c.state.value.stage)
+            assertEquals(AssistantStage.LISTENING,c.state.value.stage)
             gate.complete(Unit);yield()
             assertEquals(AssistantStage.LISTENING,c.state.value.stage)
         } finally { c.close();scope.cancel() }
