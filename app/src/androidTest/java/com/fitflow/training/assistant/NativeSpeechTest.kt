@@ -68,7 +68,7 @@ class NativeSpeechTest {
             stream.acceptWaveform(FloatArray(shorts.size+16000) { if(it<shorts.size) shorts[it]/32768f else 0f },16000)
             stream.inputFinished()
             while(engine.isReady(stream)) engine.decode(stream)
-            assertEquals("铁蛋完成本组",engine.getResult(stream).text.replace(" ",""))
+            assertEquals("铁蛋铁蛋完成本组",engine.getResult(stream).text.replace(" ",""))
         } finally { stream.release();engine.release() }
     }
     @Test fun bundledRecognizerFinishesCommandWithinOnePointThreeSecondsOfSilence() {
@@ -91,7 +91,7 @@ class NativeSpeechTest {
                 stream.acceptWaveform(frame,16000)
                 while(engine.isReady(stream)) engine.decode(stream)
                 if(engine.isEndpoint(stream)) {
-                    assertEquals("铁蛋完成本组",engine.getResult(stream).text.replace(" ",""))
+                    assertEquals("铁蛋铁蛋完成本组",engine.getResult(stream).text.replace(" ",""))
                     android.util.Log.i("AssistantValidation","endpointTrailingMs=${(start+frame.size-lastVoice)*1000/16000}")
                     assertTrue("Endpoint took over 1.3 seconds",start+frame.size-lastVoice<=maxTrailingSamples)
                     return

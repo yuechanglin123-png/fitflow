@@ -35,6 +35,7 @@ CONFIGURATIONS = {
     "baseline": ("小练小练/" + COMMON_HOTWORDS, 2.0),
     "candidate": ("铁蛋/" + COMMON_HOTWORDS, 2.0),
     "candidate-high": ("铁蛋/" + COMMON_HOTWORDS, 2.5),
+    "repeat-wake": ("铁蛋铁蛋/" + COMMON_HOTWORDS, 2.0),
     "larger-2025": ("", 1.5),
 }
 
@@ -45,12 +46,29 @@ def normalize(text: str) -> str:
 
 def classify(text: str, awake: bool = False) -> str:
     clean = normalize(text)
-    if clean.startswith("铁蛋"):
-        clean = clean.removeprefix("铁蛋")
+    if clean.startswith("铁蛋铁蛋"):
+        clean = clean.removeprefix("铁蛋铁蛋")
         if not clean:
             return "WAKE"
     elif not awake:
         return "NO_ACTION"
+    keywords = {
+        "COMPLETE_SET": "完成" in clean,
+        "SKIP_REST": "休息" in clean or "跳过" in clean,
+        "PAUSE": "暂停" in clean,
+        "COMPLETE_ALIAS": any(phrase in clean for phrase in ("这一组做完了", "这组做完了", "本组做完了")),
+        "EXTEND_ALIAS": "休息" not in clean and "跳过" not in clean and any(
+            phrase in clean for phrase in ("加30秒", "加三十秒", "延长30秒", "延长三十秒")
+        ),
+    }
+    matches = set()
+    for intent, found in keywords.items():
+        if found:
+            matches.add({"COMPLETE_ALIAS": "COMPLETE_SET", "EXTEND_ALIAS": "EXTEND_REST_30"}.get(intent, intent))
+    if len(matches) > 1:
+        return "NO_ACTION"
+    if matches:
+        return next(iter(matches))
     for prefix in ("请问", "请", "麻烦", "帮我"):
         clean = clean.removeprefix(prefix)
     for suffix in ("吧", "一下"):

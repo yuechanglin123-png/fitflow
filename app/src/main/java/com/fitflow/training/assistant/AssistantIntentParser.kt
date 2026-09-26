@@ -5,6 +5,20 @@ class AssistantIntentParser {
         val clean = AssistantSpeechText.normalize(text)
             .removePrefix("请问").removePrefix("请").removePrefix("麻烦").removePrefix("帮我")
             .removeSuffix("吧").removeSuffix("一下")
+        val skipRestKeyword = "休息" in clean || "跳过" in clean
+        val keywordCommands = listOfNotNull(
+            TrainingCommand.COMPLETE_SET.takeIf { "完成" in clean },
+            TrainingCommand.SKIP_REST.takeIf { skipRestKeyword },
+            TrainingCommand.PAUSE.takeIf { "暂停" in clean },
+            TrainingCommand.COMPLETE_SET.takeIf {
+                listOf("这一组做完了", "这组做完了", "本组做完了").any { phrase -> phrase in clean }
+            },
+            TrainingCommand.EXTEND_REST_30.takeIf {
+                !skipRestKeyword && listOf("加30秒", "加三十秒", "延长30秒", "延长三十秒").any { phrase -> phrase in clean }
+            },
+        ).distinct()
+        if (keywordCommands.size > 1) return AssistantIntent.MultipleCommands
+        if (keywordCommands.size == 1) return AssistantIntent.Command(keywordCommands.single())
         val command = when (clean) {
             "跳过休息", "结束休息" -> TrainingCommand.SKIP_REST
             "延长30秒休息时间", "延长三十秒休息时间", "延长30秒休息", "延长三十秒休息",

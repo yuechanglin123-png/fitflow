@@ -11,7 +11,7 @@ import numpy as np
 import soundfile as sf
 import sherpa_onnx
 
-HOTWORDS = '铁蛋/跳过休息/延长三十秒休息时间/暂停训练/完成本组/现在练什么/今天天气/北京/上海'
+HOTWORDS = '铁蛋铁蛋/跳过休息/延长三十秒休息时间/暂停训练/完成本组/现在练什么/今天天气/北京/上海'
 EXPANDED_HOTWORDS = HOTWORDS + '/结束休息/延长休息三十秒/再休息三十秒/休息加三十秒/暂停一下训练/这一组做完了/现在几点/今天星期几/还剩几组/还要休息多久'
 
 def main():
@@ -29,7 +29,7 @@ def main():
         if sr != 16000:
             x = np.interp(np.arange(round(len(x)*16000/sr))*sr/16000,np.arange(len(x)),x).astype(np.float32)
         return x
-    babble = np.concatenate([load(e['file']) for e in entries if e['negative'] and not e['text'].startswith('铁蛋')])
+    babble = np.concatenate([load(e['file']) for e in entries if e['negative'] and not e['text'].startswith('铁蛋铁蛋')])
     rng = np.random.default_rng(20260924)
     cases = []
     for entry in entries:

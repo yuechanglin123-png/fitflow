@@ -47,7 +47,7 @@ fun AssistantPanel(runtime:AssistantRuntime) {
                 }
                 TextButton(onClick={showCities=true}) { Text(city?.name?:"设置天气城市") }
             }
-            Text("先说“铁蛋”，在回应期间或之后的 5 秒内说“完成本组”“跳过休息”“延长三十秒”或“暂停训练”。未说指令会自动退出唤醒；没听清时会提示重说。也可以询问时间、天气和训练进度。",style=MaterialTheme.typography.bodySmall)
+            Text("先说“铁蛋铁蛋”，在回应期间或之后的 5 秒内说指令。语音中出现“完成”“暂停”“休息”或“跳过”时会执行相应训练操作；一句话包含多个操作词时会请你重说。未说指令会自动退出唤醒。也可以询问时间、天气和训练进度。",style=MaterialTheme.typography.bodySmall)
             Text("识别与播报在本机运行；天气查询需要联网。",style=MaterialTheme.typography.bodySmall)
             if(state.heard.isNotBlank()) Text("听到：${state.heard}",style=MaterialTheme.typography.bodySmall)
             if(state.reply.isNotBlank()) Text("助教：${state.reply}",style=MaterialTheme.typography.bodySmall)

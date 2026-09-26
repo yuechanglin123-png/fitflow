@@ -5,7 +5,7 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class ModelCorpusTest {
-    @Test fun tunedRecognitionPreservesCommandsAndRejectsNegativeSpeechAcrossNoiseConditions() {
+    @Test fun historicalRecognitionKeepsWakeBoundariesAcrossNoiseConditions() {
         val samples=Json.parseToJsonElement(javaClass.getResource("/assistant/asr-v9-corpus.json")!!.readText()).jsonArray
         val parser=AssistantIntentParser()
         val correct=mutableMapOf<String,Int>()
@@ -14,29 +14,42 @@ class ModelCorpusTest {
             val s=element.jsonObject
             val condition=s["condition"]!!.jsonPrimitive.content
             val expected=s["expected"]!!.jsonPrimitive.content
+            // Old extension and rest-status labels now intentionally resolve to skip-rest.
+            if(expected=="EXTEND_REST_30" || expected=="REST_REMAINING") return@forEach
             // Historical ASR fixtures were recorded with the retired wake name.
             // Substitute only that exact prefix to keep testing command parsing.
-            val recognized=s["recognized"]!!.jsonPrimitive.content.replaceFirst(Regex("^小练小练"),"铁蛋")
+            val recognized=s["recognized"]!!.jsonPrimitive.content.replaceFirst(Regex("^小练小练"),"铁蛋铁蛋")
             val afterWake=AssistantSpeechText.afterWake(recognized)
             val command=if(s["requiresWake"]!!.jsonPrimitive.boolean) afterWake else recognized
             val intent=parser.parse(command.orEmpty())
             if(expected=="no_action") {
-                // Ambient phrases outside an awake turn never authorize commands.
-                assertFalse("${s["file"]} $condition: $recognized",parser.parse(afterWake.orEmpty()) is AssistantIntent.Command)
+                // Negation samples with one operation word intentionally changed under
+                // the new policy. Keep asserting the old unsupported and mixed cases.
+                val broadCategories=listOf("完成" in command.orEmpty(),
+                    "休息" in command.orEmpty() || "跳过" in command.orEmpty(),
+                    "暂停" in command.orEmpty()).count { it }
+                if(!s["requiresWake"]!!.jsonPrimitive.boolean) {
+                    assertNull("${s["file"]} $condition: $recognized",afterWake)
+                } else if(broadCategories==0) {
+                    assertFalse("${s["file"]} $condition: $recognized",intent is AssistantIntent.Command)
+                } else if(broadCategories>1) {
+                    assertEquals("${s["file"]} $condition: $recognized",AssistantIntent.MultipleCommands,intent)
+                }
             } else {
                 positive[condition]=(positive[condition] ?: 0)+1
                 val actual=if(command==null) "no_wake" else if(command.isEmpty() && afterWake!=null) "wake" else when(intent) {
                     is AssistantIntent.Command -> intent.value.name
                     is AssistantIntent.Query -> intent.value.name
                     is AssistantIntent.Weather -> "WEATHER:${intent.city}"
+                    AssistantIntent.MultipleCommands -> "multiple_commands"
                     AssistantIntent.Unsupported -> "unsupported"
                 }
                 if(actual==expected) correct[condition]=(correct[condition] ?: 0)+1
             }
         }
         listOf("clean","noise10db").forEach { condition ->
-            assertEquals(40,positive[condition])
-            assertTrue("$condition: ${correct[condition]}/${positive[condition]}",(correct[condition] ?: 0)>=36)
+            assertEquals(30,positive[condition])
+            assertTrue("$condition: ${correct[condition]}/${positive[condition]}",(correct[condition] ?: 0)>=27)
         }
     }
     @Test fun historicalOfflineRecognitionMeetsSyntheticCorpusGate() {

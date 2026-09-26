@@ -95,7 +95,7 @@ class SherpaRecognizer(private val context:Context):SpeechRecognizerAdapter {
         executor.shutdown()
     }
     companion object {
-        const val HOTWORDS="铁蛋/跳过休息/延长三十秒休息时间/暂停训练/完成本组/现在练什么/今天天气/北京/上海"+
+        const val HOTWORDS="铁蛋铁蛋/跳过休息/延长三十秒休息时间/暂停训练/完成本组/现在练什么/今天天气/北京/上海"+
             "/结束休息/延长休息三十秒/再休息三十秒/休息加三十秒/暂停一下训练/这一组做完了/现在几点/今天星期几/还剩几组/还要休息多久"
         fun config():OnlineRecognizerConfig {
             val path="assistant/asr"

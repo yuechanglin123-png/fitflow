@@ -7,6 +7,7 @@ sealed interface AssistantIntent {
     data class Command(val value: TrainingCommand) : AssistantIntent
     data class Query(val value: LocalQuestion) : AssistantIntent
     data class Weather(val city: String?) : AssistantIntent
+    data object MultipleCommands : AssistantIntent
     data object Unsupported : AssistantIntent
 }
 data class SpeechResult(val turnId: Long, val text: String, val isFinal: Boolean)
