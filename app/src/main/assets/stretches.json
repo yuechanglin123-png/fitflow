@@ -1,0 +1,86 @@
+[
+  {
+    "id": "chest_open",
+    "name": "站姿扩胸",
+    "bodyParts": [
+      "CHEST"
+    ],
+    "steps": "站稳，肩胛轻轻向后下方收，缓慢打开双臂；保持自然呼吸。",
+    "caution": "不要挺腰代替扩胸；感到刺痛即停止。",
+    "holdSeconds": 20,
+    "sourceUrl": "https://www.acefitness.org/resources/everyone/exercise-library/209/standing-chest-stretch/",
+    "checkedOn": "2026-09-22",
+    "videoUrl": "https://www.nhs.uk/live-well/exercise/strength-and-flex-exercise-plan-how-to-videos/",
+    "illustrationName": "chest"
+  },
+  {
+    "id": "lat_reach",
+    "name": "上背部拉伸",
+    "bodyParts": [
+      "BACK"
+    ],
+    "steps": "双手在胸前交握，手臂缓慢向前伸，轻轻打开肩胛之间的上背部；保持自然呼吸。",
+    "caution": "保持膝盖微屈，不要强压肩关节。",
+    "holdSeconds": 20,
+    "sourceUrl": "https://www.nhs.uk/live-well/exercise/strength-and-flex-exercise-plan-how-to-videos/",
+    "checkedOn": "2026-09-22",
+    "videoUrl": "https://www.nhs.uk/live-well/exercise/strength-and-flex-exercise-plan-how-to-videos/",
+    "illustrationName": "back"
+  },
+  {
+    "id": "shoulder_cross",
+    "name": "肩部轻拉伸",
+    "bodyParts": [
+      "SHOULDERS"
+    ],
+    "steps": "一侧手臂平举横过胸前，另一手轻托上臂，缓慢靠近身体；换侧。",
+    "caution": "不要压肘关节，也不要耸肩。",
+    "holdSeconds": 20,
+    "sourceUrl": "https://www.cuh.nhs.uk/our-services/physiotherapy-outpatients/outpatient-physio-resources/resources/shoulder/seated-stretches/",
+    "checkedOn": "2026-09-22",
+    "videoUrl": "https://www.cuh.nhs.uk/our-services/physiotherapy-outpatients/outpatient-physio-resources/resources/shoulder/seated-stretches/",
+    "illustrationName": "shoulder"
+  },
+  {
+    "id": "thigh_release",
+    "name": "大腿前侧拉伸",
+    "bodyParts": [
+      "LEGS"
+    ],
+    "steps": "站稳并扶住固定物，一手轻握同侧脚背，缓慢把脚跟靠近臀部；换侧。",
+    "caution": "不要猛拉膝盖；拉伸到轻微牵拉感即可。",
+    "holdSeconds": 20,
+    "sourceUrl": "https://www.nhs.uk/live-well/exercise/strength-and-flex-exercise-plan-how-to-videos/",
+    "checkedOn": "2026-09-22",
+    "videoUrl": "https://www.nhs.uk/live-well/exercise/strength-and-flex-exercise-plan-how-to-videos/",
+    "illustrationName": "legs"
+  },
+  {
+    "id": "arm_overhead",
+    "name": "手臂上举拉伸",
+    "bodyParts": [
+      "ARMS"
+    ],
+    "steps": "抬起一侧手臂并屈肘，另一手轻扶肘部，缓慢向后牵引；换侧。",
+    "caution": "肩部保持放松，不要用力扳压。",
+    "holdSeconds": 20,
+    "sourceUrl": "https://www.nhs.uk/live-well/exercise/strength-and-flex-exercise-plan-how-to-videos/",
+    "checkedOn": "2026-09-22",
+    "videoUrl": "https://www.nhs.uk/live-well/exercise/strength-and-flex-exercise-plan-how-to-videos/",
+    "illustrationName": "arms"
+  },
+  {
+    "id": "core_breath",
+    "name": "仰卧放松呼吸",
+    "bodyParts": [
+      "CORE"
+    ],
+    "steps": "仰卧屈膝，双脚落地，缓慢吸气和呼气，让躯干逐渐放松。",
+    "caution": "呼吸自然，不要屏气；不适时停止。",
+    "holdSeconds": 30,
+    "sourceUrl": "https://patientinfolibrary.royalmarsden.nhs.uk/royal-mile-prehabilitation-programme-video-7c-diaphragmatic-breathing",
+    "checkedOn": "2026-09-22",
+    "videoUrl": "https://patientinfolibrary.royalmarsden.nhs.uk/royal-mile-prehabilitation-programme-video-7c-diaphragmatic-breathing",
+    "illustrationName": "core"
+  }
+]

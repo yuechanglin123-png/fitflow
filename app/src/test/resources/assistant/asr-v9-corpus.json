@@ -1,0 +1,1178 @@
+[
+  {
+    "file": "Huihui-00.wav",
+    "condition": "clean",
+    "recognized": "小练小练",
+    "requiresWake": true,
+    "expected": "wake"
+  },
+  {
+    "file": "Huihui-00.wav",
+    "condition": "noise10db",
+    "recognized": "小练小练",
+    "requiresWake": true,
+    "expected": "wake"
+  },
+  {
+    "file": "Huihui-00.wav",
+    "condition": "speech8db",
+    "recognized": "小日小练这时候",
+    "requiresWake": true,
+    "expected": "wake"
+  },
+  {
+    "file": "Huihui-01.wav",
+    "condition": "clean",
+    "recognized": "小练小练跳过休息",
+    "requiresWake": true,
+    "expected": "SKIP_REST"
+  },
+  {
+    "file": "Huihui-01.wav",
+    "condition": "noise10db",
+    "recognized": "小练小练跳过休息",
+    "requiresWake": true,
+    "expected": "SKIP_REST"
+  },
+  {
+    "file": "Huihui-01.wav",
+    "condition": "speech8db",
+    "recognized": "小练小练正在做跳过休息今天",
+    "requiresWake": true,
+    "expected": "SKIP_REST"
+  },
+  {
+    "file": "Huihui-02.wav",
+    "condition": "clean",
+    "recognized": "小练小练延长三十秒休息时间",
+    "requiresWake": true,
+    "expected": "EXTEND_REST_30"
+  },
+  {
+    "file": "Huihui-02.wav",
+    "condition": "noise10db",
+    "recognized": "小练小练延长三十秒休息时间",
+    "requiresWake": true,
+    "expected": "EXTEND_REST_30"
+  },
+  {
+    "file": "Huihui-02.wav",
+    "condition": "speech8db",
+    "recognized": "小练延长三十秒休息时间我",
+    "requiresWake": true,
+    "expected": "EXTEND_REST_30"
+  },
+  {
+    "file": "Huihui-03.wav",
+    "condition": "clean",
+    "recognized": "小练小练暂停训练",
+    "requiresWake": true,
+    "expected": "PAUSE"
+  },
+  {
+    "file": "Huihui-03.wav",
+    "condition": "noise10db",
+    "recognized": "小练小练暂停训练",
+    "requiresWake": true,
+    "expected": "PAUSE"
+  },
+  {
+    "file": "Huihui-03.wav",
+    "condition": "speech8db",
+    "recognized": "小练小练暂停训练我们一起",
+    "requiresWake": true,
+    "expected": "PAUSE"
+  },
+  {
+    "file": "Huihui-04.wav",
+    "condition": "clean",
+    "recognized": "小练小练完成本组",
+    "requiresWake": true,
+    "expected": "COMPLETE_SET"
+  },
+  {
+    "file": "Huihui-04.wav",
+    "condition": "noise10db",
+    "recognized": "小练小练完成本组",
+    "requiresWake": true,
+    "expected": "COMPLETE_SET"
+  },
+  {
+    "file": "Huihui-04.wav",
+    "condition": "speech8db",
+    "recognized": "小练小练我们完成本组",
+    "requiresWake": true,
+    "expected": "COMPLETE_SET"
+  },
+  {
+    "file": "Huihui-05.wav",
+    "condition": "clean",
+    "recognized": "小练小练现在几点",
+    "requiresWake": true,
+    "expected": "TIME"
+  },
+  {
+    "file": "Huihui-05.wav",
+    "condition": "noise10db",
+    "recognized": "小练小练现在几点",
+    "requiresWake": true,
+    "expected": "TIME"
+  },
+  {
+    "file": "Huihui-05.wav",
+    "condition": "speech8db",
+    "recognized": "小练小练做生现在几点今天工作",
+    "requiresWake": true,
+    "expected": "TIME"
+  },
+  {
+    "file": "Huihui-06.wav",
+    "condition": "clean",
+    "recognized": "小练小练北京今天天气怎么样",
+    "requiresWake": true,
+    "expected": "WEATHER:北京"
+  },
+  {
+    "file": "Huihui-06.wav",
+    "condition": "noise10db",
+    "recognized": "小练小练北京今天天气怎么样",
+    "requiresWake": true,
+    "expected": "WEATHER:北京"
+  },
+  {
+    "file": "Huihui-06.wav",
+    "condition": "speech8db",
+    "recognized": "小练小练北京今天天气怎么样这首歌",
+    "requiresWake": true,
+    "expected": "WEATHER:北京"
+  },
+  {
+    "file": "Huihui-07.wav",
+    "condition": "clean",
+    "recognized": "小练小练还剩几组",
+    "requiresWake": true,
+    "expected": "REMAINING_SETS"
+  },
+  {
+    "file": "Huihui-07.wav",
+    "condition": "noise10db",
+    "recognized": "小练小练还剩几组",
+    "requiresWake": true,
+    "expected": "REMAINING_SETS"
+  },
+  {
+    "file": "Huihui-07.wav",
+    "condition": "speech8db",
+    "recognized": "小练小练还剩几组首歌很好听",
+    "requiresWake": true,
+    "expected": "REMAINING_SETS"
+  },
+  {
+    "file": "Huihui-08.wav",
+    "condition": "clean",
+    "recognized": "跳过休息",
+    "requiresWake": false,
+    "expected": "SKIP_REST"
+  },
+  {
+    "file": "Huihui-08.wav",
+    "condition": "noise10db",
+    "recognized": "要货休息",
+    "requiresWake": false,
+    "expected": "SKIP_REST"
+  },
+  {
+    "file": "Huihui-08.wav",
+    "condition": "speech8db",
+    "recognized": "跳过休息过山墩",
+    "requiresWake": false,
+    "expected": "SKIP_REST"
+  },
+  {
+    "file": "Huihui-09.wav",
+    "condition": "clean",
+    "recognized": "延长三十秒休息时间",
+    "requiresWake": false,
+    "expected": "EXTEND_REST_30"
+  },
+  {
+    "file": "Huihui-09.wav",
+    "condition": "noise10db",
+    "recognized": "延长三十秒休息时间",
+    "requiresWake": false,
+    "expected": "EXTEND_REST_30"
+  },
+  {
+    "file": "Huihui-09.wav",
+    "condition": "speech8db",
+    "recognized": "延长三十秒休息时间",
+    "requiresWake": false,
+    "expected": "EXTEND_REST_30"
+  },
+  {
+    "file": "Huihui-10.wav",
+    "condition": "clean",
+    "recognized": "暂停训练",
+    "requiresWake": false,
+    "expected": "PAUSE"
+  },
+  {
+    "file": "Huihui-10.wav",
+    "condition": "noise10db",
+    "recognized": "暂停训练",
+    "requiresWake": false,
+    "expected": "PAUSE"
+  },
+  {
+    "file": "Huihui-10.wav",
+    "condition": "speech8db",
+    "recognized": "再提出训练今天",
+    "requiresWake": false,
+    "expected": "PAUSE"
+  },
+  {
+    "file": "Huihui-11.wav",
+    "condition": "clean",
+    "recognized": "完成本组",
+    "requiresWake": false,
+    "expected": "COMPLETE_SET"
+  },
+  {
+    "file": "Huihui-11.wav",
+    "condition": "noise10db",
+    "recognized": "完成本组",
+    "requiresWake": false,
+    "expected": "COMPLETE_SET"
+  },
+  {
+    "file": "Huihui-11.wav",
+    "condition": "speech8db",
+    "recognized": "完成本组工作做",
+    "requiresWake": false,
+    "expected": "COMPLETE_SET"
+  },
+  {
+    "file": "Huihui-12.wav",
+    "condition": "clean",
+    "recognized": "帮我跳过休息吧",
+    "requiresWake": false,
+    "expected": "SKIP_REST"
+  },
+  {
+    "file": "Huihui-12.wav",
+    "condition": "noise10db",
+    "recognized": "当我跳过休息吧",
+    "requiresWake": false,
+    "expected": "SKIP_REST"
+  },
+  {
+    "file": "Huihui-12.wav",
+    "condition": "speech8db",
+    "recognized": "帮我跳过休息怎么样",
+    "requiresWake": false,
+    "expected": "SKIP_REST"
+  },
+  {
+    "file": "Huihui-13.wav",
+    "condition": "clean",
+    "recognized": "麻烦暂停一下训练",
+    "requiresWake": false,
+    "expected": "PAUSE"
+  },
+  {
+    "file": "Huihui-13.wav",
+    "condition": "noise10db",
+    "recognized": "麻烦暂停一下训练",
+    "requiresWake": false,
+    "expected": "PAUSE"
+  },
+  {
+    "file": "Huihui-13.wav",
+    "condition": "speech8db",
+    "recognized": "反暂停一下训练正在做深度",
+    "requiresWake": false,
+    "expected": "PAUSE"
+  },
+  {
+    "file": "Huihui-14.wav",
+    "condition": "clean",
+    "recognized": "这一组做完了",
+    "requiresWake": false,
+    "expected": "COMPLETE_SET"
+  },
+  {
+    "file": "Huihui-14.wav",
+    "condition": "noise10db",
+    "recognized": "这一组做完了",
+    "requiresWake": false,
+    "expected": "COMPLETE_SET"
+  },
+  {
+    "file": "Huihui-14.wav",
+    "condition": "speech8db",
+    "recognized": "这一组做完了今天",
+    "requiresWake": false,
+    "expected": "COMPLETE_SET"
+  },
+  {
+    "file": "Huihui-15.wav",
+    "condition": "clean",
+    "recognized": "休息加三十秒",
+    "requiresWake": false,
+    "expected": "EXTEND_REST_30"
+  },
+  {
+    "file": "Huihui-15.wav",
+    "condition": "noise10db",
+    "recognized": "休息加三十秒",
+    "requiresWake": false,
+    "expected": "EXTEND_REST_30"
+  },
+  {
+    "file": "Huihui-15.wav",
+    "condition": "speech8db",
+    "recognized": "休息加三十秒歌",
+    "requiresWake": false,
+    "expected": "EXTEND_REST_30"
+  },
+  {
+    "file": "Huihui-16.wav",
+    "condition": "clean",
+    "recognized": "再休息三十秒",
+    "requiresWake": false,
+    "expected": "EXTEND_REST_30"
+  },
+  {
+    "file": "Huihui-16.wav",
+    "condition": "noise10db",
+    "recognized": "再休息三十秒",
+    "requiresWake": false,
+    "expected": "EXTEND_REST_30"
+  },
+  {
+    "file": "Huihui-16.wav",
+    "condition": "speech8db",
+    "recognized": "在修做三十秒今天",
+    "requiresWake": false,
+    "expected": "EXTEND_REST_30"
+  },
+  {
+    "file": "Huihui-17.wav",
+    "condition": "clean",
+    "recognized": "现在几点了",
+    "requiresWake": false,
+    "expected": "TIME"
+  },
+  {
+    "file": "Huihui-17.wav",
+    "condition": "noise10db",
+    "recognized": "现在几点了",
+    "requiresWake": false,
+    "expected": "TIME"
+  },
+  {
+    "file": "Huihui-17.wav",
+    "condition": "speech8db",
+    "recognized": "现在几点了天工作怎么",
+    "requiresWake": false,
+    "expected": "TIME"
+  },
+  {
+    "file": "Huihui-18.wav",
+    "condition": "clean",
+    "recognized": "今天星期几",
+    "requiresWake": false,
+    "expected": "DATE"
+  },
+  {
+    "file": "Huihui-18.wav",
+    "condition": "noise10db",
+    "recognized": "今天星期几",
+    "requiresWake": false,
+    "expected": "DATE"
+  },
+  {
+    "file": "Huihui-18.wav",
+    "condition": "speech8db",
+    "recognized": "今天星期几",
+    "requiresWake": false,
+    "expected": "DATE"
+  },
+  {
+    "file": "Huihui-19.wav",
+    "condition": "clean",
+    "recognized": "还要休息多久",
+    "requiresWake": false,
+    "expected": "REST_REMAINING"
+  },
+  {
+    "file": "Huihui-19.wav",
+    "condition": "noise10db",
+    "recognized": "还要休息多久",
+    "requiresWake": false,
+    "expected": "REST_REMAINING"
+  },
+  {
+    "file": "Huihui-19.wav",
+    "condition": "speech8db",
+    "recognized": "还要休息多久一起喝杯",
+    "requiresWake": false,
+    "expected": "REST_REMAINING"
+  },
+  {
+    "file": "Huihui-20.wav",
+    "condition": "clean",
+    "recognized": "小练小练不要完成本组",
+    "requiresWake": true,
+    "expected": "no_action"
+  },
+  {
+    "file": "Huihui-20.wav",
+    "condition": "noise10db",
+    "recognized": "小练小练不要完成本组",
+    "requiresWake": true,
+    "expected": "no_action"
+  },
+  {
+    "file": "Huihui-20.wav",
+    "condition": "speech8db",
+    "recognized": "小练小练今天不要乱成本族我",
+    "requiresWake": true,
+    "expected": "no_action"
+  },
+  {
+    "file": "Huihui-21.wav",
+    "condition": "clean",
+    "recognized": "小练小练别暂停训练",
+    "requiresWake": true,
+    "expected": "no_action"
+  },
+  {
+    "file": "Huihui-21.wav",
+    "condition": "noise10db",
+    "recognized": "小练小练结赞型训练",
+    "requiresWake": true,
+    "expected": "no_action"
+  },
+  {
+    "file": "Huihui-21.wav",
+    "condition": "speech8db",
+    "recognized": "小练小练也暂停训练我们一起合",
+    "requiresWake": true,
+    "expected": "no_action"
+  },
+  {
+    "file": "Huihui-22.wav",
+    "condition": "clean",
+    "recognized": "小练小练完成本组然后暂停训练",
+    "requiresWake": true,
+    "expected": "no_action"
+  },
+  {
+    "file": "Huihui-22.wav",
+    "condition": "noise10db",
+    "recognized": "小练小练完成本组然后暂停训练",
+    "requiresWake": true,
+    "expected": "no_action"
+  },
+  {
+    "file": "Huihui-22.wav",
+    "condition": "speech8db",
+    "recognized": "小练小练完成本组然后暂停训练我们一起合",
+    "requiresWake": true,
+    "expected": "no_action"
+  },
+  {
+    "file": "Huihui-23.wav",
+    "condition": "clean",
+    "recognized": "小练小练延长十三秒",
+    "requiresWake": true,
+    "expected": "no_action"
+  },
+  {
+    "file": "Huihui-23.wav",
+    "condition": "noise10db",
+    "recognized": "小练小练延长十三秒",
+    "requiresWake": true,
+    "expected": "no_action"
+  },
+  {
+    "file": "Huihui-23.wav",
+    "condition": "speech8db",
+    "recognized": "小练小练延长十三秒",
+    "requiresWake": true,
+    "expected": "no_action"
+  },
+  {
+    "file": "Huihui-24.wav",
+    "condition": "clean",
+    "recognized": "我们一起喝杯水",
+    "requiresWake": false,
+    "expected": "no_action"
+  },
+  {
+    "file": "Huihui-24.wav",
+    "condition": "noise10db",
+    "recognized": "我们一起喝杯水",
+    "requiresWake": false,
+    "expected": "no_action"
+  },
+  {
+    "file": "Huihui-24.wav",
+    "condition": "speech8db",
+    "recognized": "我们一起喝杯水这首歌",
+    "requiresWake": false,
+    "expected": "no_action"
+  },
+  {
+    "file": "Huihui-25.wav",
+    "condition": "clean",
+    "recognized": "这首歌很好听",
+    "requiresWake": false,
+    "expected": "no_action"
+  },
+  {
+    "file": "Huihui-25.wav",
+    "condition": "noise10db",
+    "recognized": "这首歌很好听",
+    "requiresWake": false,
+    "expected": "no_action"
+  },
+  {
+    "file": "Huihui-25.wav",
+    "condition": "speech8db",
+    "recognized": "这首歌很好听这首",
+    "requiresWake": false,
+    "expected": "no_action"
+  },
+  {
+    "file": "Huihui-26.wav",
+    "condition": "clean",
+    "recognized": "我正在做深蹲",
+    "requiresWake": false,
+    "expected": "no_action"
+  },
+  {
+    "file": "Huihui-26.wav",
+    "condition": "noise10db",
+    "recognized": "我正在做深蹲",
+    "requiresWake": false,
+    "expected": "no_action"
+  },
+  {
+    "file": "Huihui-26.wav",
+    "condition": "speech8db",
+    "recognized": "我正在做深蹲我",
+    "requiresWake": false,
+    "expected": "no_action"
+  },
+  {
+    "file": "Huihui-27.wav",
+    "condition": "clean",
+    "recognized": "今天工作怎么样",
+    "requiresWake": false,
+    "expected": "no_action"
+  },
+  {
+    "file": "Huihui-27.wav",
+    "condition": "noise10db",
+    "recognized": "今天工作怎么样",
+    "requiresWake": false,
+    "expected": "no_action"
+  },
+  {
+    "file": "Huihui-27.wav",
+    "condition": "speech8db",
+    "recognized": "天天工作怎么样一起喝杯",
+    "requiresWake": false,
+    "expected": "no_action"
+  },
+  {
+    "file": "Kangkang-00.wav",
+    "condition": "clean",
+    "recognized": "小练小练",
+    "requiresWake": true,
+    "expected": "wake"
+  },
+  {
+    "file": "Kangkang-00.wav",
+    "condition": "noise10db",
+    "recognized": "小练小练",
+    "requiresWake": true,
+    "expected": "wake"
+  },
+  {
+    "file": "Kangkang-00.wav",
+    "condition": "speech8db",
+    "recognized": "小练小练",
+    "requiresWake": true,
+    "expected": "wake"
+  },
+  {
+    "file": "Kangkang-01.wav",
+    "condition": "clean",
+    "recognized": "小练小练跳过休息",
+    "requiresWake": true,
+    "expected": "SKIP_REST"
+  },
+  {
+    "file": "Kangkang-01.wav",
+    "condition": "noise10db",
+    "recognized": "小练小练跳过休息",
+    "requiresWake": true,
+    "expected": "SKIP_REST"
+  },
+  {
+    "file": "Kangkang-01.wav",
+    "condition": "speech8db",
+    "recognized": "小练小练一样跳过休息我们一起来",
+    "requiresWake": true,
+    "expected": "SKIP_REST"
+  },
+  {
+    "file": "Kangkang-02.wav",
+    "condition": "clean",
+    "recognized": "小练小练延长三十秒休息时间",
+    "requiresWake": true,
+    "expected": "EXTEND_REST_30"
+  },
+  {
+    "file": "Kangkang-02.wav",
+    "condition": "noise10db",
+    "recognized": "小练小练延长三十秒休息时间",
+    "requiresWake": true,
+    "expected": "EXTEND_REST_30"
+  },
+  {
+    "file": "Kangkang-02.wav",
+    "condition": "speech8db",
+    "recognized": "小练小练延长三十秒休息时间",
+    "requiresWake": true,
+    "expected": "EXTEND_REST_30"
+  },
+  {
+    "file": "Kangkang-03.wav",
+    "condition": "clean",
+    "recognized": "小练小练暂停训练",
+    "requiresWake": true,
+    "expected": "PAUSE"
+  },
+  {
+    "file": "Kangkang-03.wav",
+    "condition": "noise10db",
+    "recognized": "小练小练暂停训练",
+    "requiresWake": true,
+    "expected": "PAUSE"
+  },
+  {
+    "file": "Kangkang-03.wav",
+    "condition": "speech8db",
+    "recognized": "小练小练暂停训练今天工作",
+    "requiresWake": true,
+    "expected": "PAUSE"
+  },
+  {
+    "file": "Kangkang-04.wav",
+    "condition": "clean",
+    "recognized": "小练小练完成本组",
+    "requiresWake": true,
+    "expected": "COMPLETE_SET"
+  },
+  {
+    "file": "Kangkang-04.wav",
+    "condition": "noise10db",
+    "recognized": "小练小练完成本组",
+    "requiresWake": true,
+    "expected": "COMPLETE_SET"
+  },
+  {
+    "file": "Kangkang-04.wav",
+    "condition": "speech8db",
+    "recognized": "小练小练完成本组深蹲",
+    "requiresWake": true,
+    "expected": "COMPLETE_SET"
+  },
+  {
+    "file": "Kangkang-05.wav",
+    "condition": "clean",
+    "recognized": "小练小练现在几点",
+    "requiresWake": true,
+    "expected": "TIME"
+  },
+  {
+    "file": "Kangkang-05.wav",
+    "condition": "noise10db",
+    "recognized": "小练小练现在几点",
+    "requiresWake": true,
+    "expected": "TIME"
+  },
+  {
+    "file": "Kangkang-05.wav",
+    "condition": "speech8db",
+    "recognized": "小练小练现在几点很好听",
+    "requiresWake": true,
+    "expected": "TIME"
+  },
+  {
+    "file": "Kangkang-06.wav",
+    "condition": "clean",
+    "recognized": "小练小练北京今天天气怎么样",
+    "requiresWake": true,
+    "expected": "WEATHER:北京"
+  },
+  {
+    "file": "Kangkang-06.wav",
+    "condition": "noise10db",
+    "recognized": "小练小练北京今天天气怎么样",
+    "requiresWake": true,
+    "expected": "WEATHER:北京"
+  },
+  {
+    "file": "Kangkang-06.wav",
+    "condition": "speech8db",
+    "recognized": "小练小练北京今天天气怎么样",
+    "requiresWake": true,
+    "expected": "WEATHER:北京"
+  },
+  {
+    "file": "Kangkang-07.wav",
+    "condition": "clean",
+    "recognized": "小练小练还剩几组",
+    "requiresWake": true,
+    "expected": "REMAINING_SETS"
+  },
+  {
+    "file": "Kangkang-07.wav",
+    "condition": "noise10db",
+    "recognized": "小练小练还剩几组",
+    "requiresWake": true,
+    "expected": "REMAINING_SETS"
+  },
+  {
+    "file": "Kangkang-07.wav",
+    "condition": "speech8db",
+    "recognized": "小练小练还剩几组很好听",
+    "requiresWake": true,
+    "expected": "REMAINING_SETS"
+  },
+  {
+    "file": "Kangkang-08.wav",
+    "condition": "clean",
+    "recognized": "跳过休息",
+    "requiresWake": false,
+    "expected": "SKIP_REST"
+  },
+  {
+    "file": "Kangkang-08.wav",
+    "condition": "noise10db",
+    "recognized": "那我休息",
+    "requiresWake": false,
+    "expected": "SKIP_REST"
+  },
+  {
+    "file": "Kangkang-08.wav",
+    "condition": "speech8db",
+    "recognized": "跳过休息这场",
+    "requiresWake": false,
+    "expected": "SKIP_REST"
+  },
+  {
+    "file": "Kangkang-09.wav",
+    "condition": "clean",
+    "recognized": "延长三十秒休息时间",
+    "requiresWake": false,
+    "expected": "EXTEND_REST_30"
+  },
+  {
+    "file": "Kangkang-09.wav",
+    "condition": "noise10db",
+    "recognized": "延长三十秒休息时间",
+    "requiresWake": false,
+    "expected": "EXTEND_REST_30"
+  },
+  {
+    "file": "Kangkang-09.wav",
+    "condition": "speech8db",
+    "recognized": "延长三十秒休息时间",
+    "requiresWake": false,
+    "expected": "EXTEND_REST_30"
+  },
+  {
+    "file": "Kangkang-10.wav",
+    "condition": "clean",
+    "recognized": "暂停训练",
+    "requiresWake": false,
+    "expected": "PAUSE"
+  },
+  {
+    "file": "Kangkang-10.wav",
+    "condition": "noise10db",
+    "recognized": "暂停训练",
+    "requiresWake": false,
+    "expected": "PAUSE"
+  },
+  {
+    "file": "Kangkang-10.wav",
+    "condition": "speech8db",
+    "recognized": "暂停训练",
+    "requiresWake": false,
+    "expected": "PAUSE"
+  },
+  {
+    "file": "Kangkang-11.wav",
+    "condition": "clean",
+    "recognized": "完成本组",
+    "requiresWake": false,
+    "expected": "COMPLETE_SET"
+  },
+  {
+    "file": "Kangkang-11.wav",
+    "condition": "noise10db",
+    "recognized": "完成本组",
+    "requiresWake": false,
+    "expected": "COMPLETE_SET"
+  },
+  {
+    "file": "Kangkang-11.wav",
+    "condition": "speech8db",
+    "recognized": "完成本组",
+    "requiresWake": false,
+    "expected": "COMPLETE_SET"
+  },
+  {
+    "file": "Kangkang-12.wav",
+    "condition": "clean",
+    "recognized": "帮我跳过休息吧",
+    "requiresWake": false,
+    "expected": "SKIP_REST"
+  },
+  {
+    "file": "Kangkang-12.wav",
+    "condition": "noise10db",
+    "recognized": "帮我跳过休息吧",
+    "requiresWake": false,
+    "expected": "SKIP_REST"
+  },
+  {
+    "file": "Kangkang-12.wav",
+    "condition": "speech8db",
+    "recognized": "帮我跳过休息吧好听",
+    "requiresWake": false,
+    "expected": "SKIP_REST"
+  },
+  {
+    "file": "Kangkang-13.wav",
+    "condition": "clean",
+    "recognized": "麻烦暂停一下训练",
+    "requiresWake": false,
+    "expected": "PAUSE"
+  },
+  {
+    "file": "Kangkang-13.wav",
+    "condition": "noise10db",
+    "recognized": "麻烦暂停一下训练",
+    "requiresWake": false,
+    "expected": "PAUSE"
+  },
+  {
+    "file": "Kangkang-13.wav",
+    "condition": "speech8db",
+    "recognized": "麻烦暂停一下训练我们",
+    "requiresWake": false,
+    "expected": "PAUSE"
+  },
+  {
+    "file": "Kangkang-14.wav",
+    "condition": "clean",
+    "recognized": "这一组做完了",
+    "requiresWake": false,
+    "expected": "COMPLETE_SET"
+  },
+  {
+    "file": "Kangkang-14.wav",
+    "condition": "noise10db",
+    "recognized": "这一组做完了",
+    "requiresWake": false,
+    "expected": "COMPLETE_SET"
+  },
+  {
+    "file": "Kangkang-14.wav",
+    "condition": "speech8db",
+    "recognized": "这一组做完了今天空",
+    "requiresWake": false,
+    "expected": "COMPLETE_SET"
+  },
+  {
+    "file": "Kangkang-15.wav",
+    "condition": "clean",
+    "recognized": "休息加三十秒",
+    "requiresWake": false,
+    "expected": "EXTEND_REST_30"
+  },
+  {
+    "file": "Kangkang-15.wav",
+    "condition": "noise10db",
+    "recognized": "休息加三十秒",
+    "requiresWake": false,
+    "expected": "EXTEND_REST_30"
+  },
+  {
+    "file": "Kangkang-15.wav",
+    "condition": "speech8db",
+    "recognized": "休息加三十秒这首歌可",
+    "requiresWake": false,
+    "expected": "EXTEND_REST_30"
+  },
+  {
+    "file": "Kangkang-16.wav",
+    "condition": "clean",
+    "recognized": "再休息三十秒",
+    "requiresWake": false,
+    "expected": "EXTEND_REST_30"
+  },
+  {
+    "file": "Kangkang-16.wav",
+    "condition": "noise10db",
+    "recognized": "再休息三十秒",
+    "requiresWake": false,
+    "expected": "EXTEND_REST_30"
+  },
+  {
+    "file": "Kangkang-16.wav",
+    "condition": "speech8db",
+    "recognized": "再休息三十秒",
+    "requiresWake": false,
+    "expected": "EXTEND_REST_30"
+  },
+  {
+    "file": "Kangkang-17.wav",
+    "condition": "clean",
+    "recognized": "现在几点了",
+    "requiresWake": false,
+    "expected": "TIME"
+  },
+  {
+    "file": "Kangkang-17.wav",
+    "condition": "noise10db",
+    "recognized": "现在几点了",
+    "requiresWake": false,
+    "expected": "TIME"
+  },
+  {
+    "file": "Kangkang-17.wav",
+    "condition": "speech8db",
+    "recognized": "现在几点了我正在",
+    "requiresWake": false,
+    "expected": "TIME"
+  },
+  {
+    "file": "Kangkang-18.wav",
+    "condition": "clean",
+    "recognized": "今天星期几",
+    "requiresWake": false,
+    "expected": "DATE"
+  },
+  {
+    "file": "Kangkang-18.wav",
+    "condition": "noise10db",
+    "recognized": "今天星期几",
+    "requiresWake": false,
+    "expected": "DATE"
+  },
+  {
+    "file": "Kangkang-18.wav",
+    "condition": "speech8db",
+    "recognized": "今天星期几火车",
+    "requiresWake": false,
+    "expected": "DATE"
+  },
+  {
+    "file": "Kangkang-19.wav",
+    "condition": "clean",
+    "recognized": "还要休息多久",
+    "requiresWake": false,
+    "expected": "REST_REMAINING"
+  },
+  {
+    "file": "Kangkang-19.wav",
+    "condition": "noise10db",
+    "recognized": "还要休息多久",
+    "requiresWake": false,
+    "expected": "REST_REMAINING"
+  },
+  {
+    "file": "Kangkang-19.wav",
+    "condition": "speech8db",
+    "recognized": "还要休息多久我们一起",
+    "requiresWake": false,
+    "expected": "REST_REMAINING"
+  },
+  {
+    "file": "Kangkang-20.wav",
+    "condition": "clean",
+    "recognized": "小练小练不要完成本组",
+    "requiresWake": true,
+    "expected": "no_action"
+  },
+  {
+    "file": "Kangkang-20.wav",
+    "condition": "noise10db",
+    "recognized": "小练小练不要完成本组",
+    "requiresWake": true,
+    "expected": "no_action"
+  },
+  {
+    "file": "Kangkang-20.wav",
+    "condition": "speech8db",
+    "recognized": "小练小练不要完成本组这首歌",
+    "requiresWake": true,
+    "expected": "no_action"
+  },
+  {
+    "file": "Kangkang-21.wav",
+    "condition": "clean",
+    "recognized": "小练小练别暂停训练",
+    "requiresWake": true,
+    "expected": "no_action"
+  },
+  {
+    "file": "Kangkang-21.wav",
+    "condition": "noise10db",
+    "recognized": "小练小练别暂停训练",
+    "requiresWake": true,
+    "expected": "no_action"
+  },
+  {
+    "file": "Kangkang-21.wav",
+    "condition": "speech8db",
+    "recognized": "小练小练这些暂停训练",
+    "requiresWake": true,
+    "expected": "no_action"
+  },
+  {
+    "file": "Kangkang-22.wav",
+    "condition": "clean",
+    "recognized": "小练小练完成本组然后暂停训练",
+    "requiresWake": true,
+    "expected": "no_action"
+  },
+  {
+    "file": "Kangkang-22.wav",
+    "condition": "noise10db",
+    "recognized": "小练小练完成本组然后暂停训练",
+    "requiresWake": true,
+    "expected": "no_action"
+  },
+  {
+    "file": "Kangkang-22.wav",
+    "condition": "speech8db",
+    "recognized": "小练小练完成本组然后暂停训练",
+    "requiresWake": true,
+    "expected": "no_action"
+  },
+  {
+    "file": "Kangkang-23.wav",
+    "condition": "clean",
+    "recognized": "小练小练延长十三秒",
+    "requiresWake": true,
+    "expected": "no_action"
+  },
+  {
+    "file": "Kangkang-23.wav",
+    "condition": "noise10db",
+    "recognized": "小练小练延长十三秒",
+    "requiresWake": true,
+    "expected": "no_action"
+  },
+  {
+    "file": "Kangkang-23.wav",
+    "condition": "speech8db",
+    "recognized": "小练小练延长十三秒或",
+    "requiresWake": true,
+    "expected": "no_action"
+  },
+  {
+    "file": "Kangkang-24.wav",
+    "condition": "clean",
+    "recognized": "我们一起喝杯水",
+    "requiresWake": false,
+    "expected": "no_action"
+  },
+  {
+    "file": "Kangkang-24.wav",
+    "condition": "noise10db",
+    "recognized": "我们一起喝杯水",
+    "requiresWake": false,
+    "expected": "no_action"
+  },
+  {
+    "file": "Kangkang-24.wav",
+    "condition": "speech8db",
+    "recognized": "我们一起喝杯水正在做",
+    "requiresWake": false,
+    "expected": "no_action"
+  },
+  {
+    "file": "Kangkang-25.wav",
+    "condition": "clean",
+    "recognized": "这首歌很好听",
+    "requiresWake": false,
+    "expected": "no_action"
+  },
+  {
+    "file": "Kangkang-25.wav",
+    "condition": "noise10db",
+    "recognized": "这首歌很好听",
+    "requiresWake": false,
+    "expected": "no_action"
+  },
+  {
+    "file": "Kangkang-25.wav",
+    "condition": "speech8db",
+    "recognized": "这首歌很好听我正在",
+    "requiresWake": false,
+    "expected": "no_action"
+  },
+  {
+    "file": "Kangkang-26.wav",
+    "condition": "clean",
+    "recognized": "我正在做深蹲",
+    "requiresWake": false,
+    "expected": "no_action"
+  },
+  {
+    "file": "Kangkang-26.wav",
+    "condition": "noise10db",
+    "recognized": "我正在做深蹲",
+    "requiresWake": false,
+    "expected": "no_action"
+  },
+  {
+    "file": "Kangkang-26.wav",
+    "condition": "speech8db",
+    "recognized": "我正在做深蹲这首歌曲",
+    "requiresWake": false,
+    "expected": "no_action"
+  },
+  {
+    "file": "Kangkang-27.wav",
+    "condition": "clean",
+    "recognized": "今天工作怎么样",
+    "requiresWake": false,
+    "expected": "no_action"
+  },
+  {
+    "file": "Kangkang-27.wav",
+    "condition": "noise10db",
+    "recognized": "今天工作怎么样",
+    "requiresWake": false,
+    "expected": "no_action"
+  },
+  {
+    "file": "Kangkang-27.wav",
+    "condition": "speech8db",
+    "recognized": "今天工作怎么样怎么样",
+    "requiresWake": false,
+    "expected": "no_action"
+  }
+]

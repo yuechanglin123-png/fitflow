@@ -1,0 +1,258 @@
+[
+  {
+    "id": "dumbbell_front_squat",
+    "name": "哑铃前蹲",
+    "bodyParts": [
+      "LEGS",
+      "CORE"
+    ],
+    "difficulty": "BEGINNER",
+    "caution": "双脚踩稳，哑铃靠近肩部；下蹲时膝盖朝脚尖方向，背部保持自然伸展。",
+    "sourceUrl": "https://www.nasm.org/resource-center/exercise-library/dumbbell-front-squat",
+    "checkedOn": "2026-09-22",
+    "videoUrl": "https://www.youtube.com/watch?v=hZI8Yy5elZs",
+    "illustrationName": "front_squat"
+  },
+  {
+    "id": "barbell_bench_press",
+    "name": "杠铃卧推",
+    "bodyParts": [
+      "CHEST",
+      "ARMS",
+      "SHOULDERS"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "caution": "先确认杠铃片固定，双脚踩地、肩胛稳定；重量较大时请同伴保护。",
+    "sourceUrl": "https://www.nasm.org/resource-center/exercise-library/barbell-bench-press",
+    "checkedOn": "2026-09-22",
+    "videoUrl": "https://www.youtube.com/watch?v=CayG6UYqL8g",
+    "illustrationName": "bench_press",
+    "keywords": ["卧推", "平板卧推", "bench press", "barbell bench"]
+  },
+  {
+    "id": "seated_machine_row",
+    "name": "坐姿器械划船",
+    "bodyParts": [
+      "BACK",
+      "ARMS"
+    ],
+    "difficulty": "BEGINNER",
+    "caution": "先调节座椅与把手位置；拉起时保持躯干稳定，避免借力猛甩。",
+    "sourceUrl": "https://www.nasm.org/resource-center/exercise-library/seated-machine-row-close-grip",
+    "checkedOn": "2026-09-22",
+    "videoUrl": "https://www.youtube.com/watch?v=k0cTJCfxa0Y",
+    "illustrationName": "seated_row"
+  },
+  {
+    "id": "face_pull",
+    "name": "绳索面拉",
+    "bodyParts": [
+      "SHOULDERS",
+      "BACK"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "caution": "滑轮调至面部附近，以可控制的重量拉向面部；不要耸肩或仰身借力。",
+    "sourceUrl": "https://www.nasm.org/resource-center/exercise-library/face-pull",
+    "checkedOn": "2026-09-22",
+    "videoUrl": "https://www.youtube.com/watch?v=eTCBSFlCJ_s",
+    "illustrationName": "face_pull"
+  },
+  {
+    "id": "barbell_bicep_curl",
+    "name": "杠铃弯举",
+    "bodyParts": [
+      "ARMS"
+    ],
+    "difficulty": "BEGINNER",
+    "caution": "肘部靠近身体，缓慢抬起和放下杠铃；身体不要前后摇摆。",
+    "sourceUrl": "https://www.nasm.org/resource-center/exercise-library/barbell-bicep-curl",
+    "checkedOn": "2026-09-22",
+    "videoUrl": "https://www.youtube.com/watch?v=pQfJR-sSIvA",
+    "illustrationName": "curl"
+  },
+  {
+    "id": "dead_bug",
+    "name": "死虫式",
+    "bodyParts": [
+      "CORE"
+    ],
+    "difficulty": "BEGINNER",
+    "caution": "仰卧时保持腰背稳定，交替伸展对侧手脚；动作放慢，不要憋气。",
+    "sourceUrl": "https://www.nasm.org/resource-center/exercise-library/dead-bug",
+    "checkedOn": "2026-09-22",
+    "videoUrl": "https://www.youtube.com/watch?v=bxn9FBrt4-A",
+    "illustrationName": "dead_bug"
+  },
+  {
+    "id": "romanian_deadlift",
+    "name": "杠铃罗马尼亚硬拉",
+    "bodyParts": [
+      "LEGS",
+      "BACK"
+    ],
+    "difficulty": "INTERMEDIATE",
+    "caution": "屈髋向后推，膝盖微屈；杠铃贴近双腿，保持腰背自然姿态。",
+    "sourceUrl": "https://www.nasm.org/resource-center/exercise-library/romanian-deadlift-barbell",
+    "checkedOn": "2026-09-22",
+    "videoUrl": "https://www.youtube.com/watch?v=xgusDooVfKU",
+    "illustrationName": "hip_hinge"
+  },
+  {
+    "id": "single_leg_squat",
+    "name": "单腿深蹲",
+    "bodyParts": [
+      "LEGS",
+      "CORE"
+    ],
+    "difficulty": "ADVANCED",
+    "caution": "先在稳固支撑旁练习，下降幅度以可控制为准；支撑腿膝盖朝脚尖方向。",
+    "sourceUrl": "https://www.nasm.org/resource-center/exercise-library/single-leg-squat",
+    "checkedOn": "2026-09-22",
+    "videoUrl": "https://www.youtube.com/watch?v=sSXnaFyhiZs",
+    "illustrationName": "single_leg_squat"
+  },
+  {
+    "id": "barbell_back_squat",
+    "name": "杠铃深蹲",
+    "bodyParts": ["LEGS", "CORE"],
+    "difficulty": "INTERMEDIATE",
+    "caution": "先调整深蹲架安全杠并确认杠铃片固定；双脚踩稳，收紧躯干，膝盖沿脚尖方向移动；在可控制的范围内下蹲。",
+    "sourceUrl": "https://www.acefitness.org/resources/everyone/exercise-library/11/back-squat/",
+    "checkedOn": "2026-09-23",
+    "videoUrl": "https://www.youtube.com/watch?v=-bJIpOq-LWk",
+    "illustrationName": "barbell_squat",
+    "keywords": ["深蹲", "背蹲", "squat", "back squat", "自由重量"]
+  },
+  {
+    "id": "barbell_deadlift",
+    "name": "杠铃传统硬拉",
+    "bodyParts": ["LEGS", "BACK", "CORE"],
+    "difficulty": "INTERMEDIATE",
+    "caution": "杠铃靠近小腿，屈髋屈膝握杠，保持背部自然姿态；起身时让杠沿腿部上移，避免猛拉或过度后仰。",
+    "sourceUrl": "https://www.nasm.org/resource-center/exercise-library/barbell-deadlift",
+    "checkedOn": "2026-09-23",
+    "videoUrl": "https://www.youtube.com/watch?v=Z6gcRfPNcZo",
+    "illustrationName": "hip_hinge",
+    "keywords": ["硬拉", "传统硬拉", "deadlift", "conventional deadlift", "自由重量"]
+  },
+  {
+    "id": "incline_barbell_bench_press",
+    "name": "上斜杠铃卧推",
+    "bodyParts": ["CHEST", "SHOULDERS", "ARMS"],
+    "difficulty": "INTERMEDIATE",
+    "caution": "将卧凳调为上斜，双脚踩稳并保持肩胛稳定；控制杠铃下放至上胸附近，避免弹起；大重量时请同伴保护。",
+    "sourceUrl": "https://www.nasm.org/resource-center/exercise-library/incline-barbell-bench-press",
+    "checkedOn": "2026-09-23",
+    "videoUrl": "https://www.youtube.com/watch?v=BjGLs6KGWUc",
+    "illustrationName": "bench_press",
+    "keywords": ["上斜卧推", "卧推", "incline bench press", "incline barbell press"]
+  },
+  {
+    "id": "decline_barbell_bench_press",
+    "name": "下斜杠铃卧推",
+    "bodyParts": ["CHEST", "ARMS", "SHOULDERS"],
+    "difficulty": "ADVANCED",
+    "caution": "先固定双腿并确认卧凳稳定；在同伴保护下取杠，缓慢下放至胸部下方附近；避免杠铃反弹和失控。",
+    "sourceUrl": "https://fitnessvolt.com/24615/decline-barbell-bench-press/",
+    "checkedOn": "2026-09-23",
+    "videoUrl": "https://www.youtube.com/watch?v=ifWEwZDWMAw",
+    "illustrationName": "bench_press",
+    "keywords": ["下斜卧推", "卧推", "decline bench press", "decline barbell press"]
+  },
+  {
+    "id": "dumbbell_shoulder_press",
+    "name": "哑铃推举",
+    "bodyParts": ["SHOULDERS", "ARMS"],
+    "difficulty": "BEGINNER",
+    "caution": "坐稳并保持躯干稳定，哑铃从肩部附近向上推；手腕与前臂对齐，避免为完成动作而过度后仰。",
+    "sourceUrl": "https://www.acefitness.org/resources/pros/expert-articles/9074/smart-shoulder-solutions-an-evidence-based-approach-to-training-the-deltoids/",
+    "checkedOn": "2026-09-23",
+    "videoUrl": "https://www.youtube.com/watch?v=MMjBnEBnZKM",
+    "illustrationName": "shoulder_press",
+    "keywords": ["肩推", "哑铃肩推", "dumbbell shoulder press", "dumbbell overhead press"]
+  },
+  {
+    "id": "dumbbell_fly",
+    "name": "哑铃飞鸟",
+    "bodyParts": ["CHEST", "SHOULDERS"],
+    "difficulty": "INTERMEDIATE",
+    "caution": "仰卧在平凳上，双脚踩稳；手肘保持微屈，缓慢向两侧打开至可控制范围，再沿弧线合拢；勿使用过重哑铃。",
+    "sourceUrl": "https://www.acefitness.org/resources/everyone/exercise-library/21/lying-chest-fly/",
+    "checkedOn": "2026-09-23",
+    "videoUrl": "https://www.youtube.com/watch?v=QaJcczm4uZU",
+    "illustrationName": "chest_fly",
+    "keywords": ["飞鸟", "卧式飞鸟", "dumbbell fly", "chest fly"]
+  },
+  {
+    "id": "smith_machine_squat",
+    "name": "史密斯机深蹲",
+    "bodyParts": ["LEGS", "CORE"],
+    "difficulty": "BEGINNER",
+    "caution": "调整安全挡块并确认杠铃轨道顺畅；选择舒适站距，脚掌踩稳、躯干稳定，沿固定轨道缓慢下蹲和起身。",
+    "sourceUrl": "https://www.strengthlog.com/smith-machine-squat/",
+    "checkedOn": "2026-09-23",
+    "videoUrl": "https://www.youtube.com/watch?v=DUWK_gKcRCc",
+    "illustrationName": "barbell_squat",
+    "keywords": ["史密斯", "器械深蹲", "smith squat", "smith machine", "squat"]
+  },
+  {
+    "id": "chest_press_machine",
+    "name": "坐姿器械推胸",
+    "bodyParts": ["CHEST", "ARMS", "SHOULDERS"],
+    "difficulty": "BEGINNER",
+    "caution": "调整座椅使把手与胸部大致齐平，肩胛贴稳靠背；平稳推起并控制回程，避免锁死肘部或让配重撞击。",
+    "sourceUrl": "https://www.nasm.org/resource-center/exercise-library/chest-press-machine",
+    "checkedOn": "2026-09-23",
+    "videoUrl": "https://www.youtube.com/watch?v=lRo9zZ7EwpM",
+    "illustrationName": "machine_press",
+    "keywords": ["器械推胸", "推胸", "machine chest press", "seated chest press"]
+  },
+  {
+    "id": "shoulder_press_machine",
+    "name": "坐姿器械肩推",
+    "bodyParts": ["SHOULDERS", "ARMS"],
+    "difficulty": "BEGINNER",
+    "caution": "调节座椅使把手位于肩部附近，背部贴住靠垫；向上平稳推起并控制下放，不要耸肩或过度挺腰。",
+    "sourceUrl": "https://www.acefitness.org/resources/everyone/exercise-library/186/seated-shoulder-press/",
+    "checkedOn": "2026-09-23",
+    "videoUrl": "https://www.youtube.com/watch?v=GcY6TZxfS0k",
+    "illustrationName": "shoulder_press",
+    "keywords": ["器械推举", "器械肩推", "machine shoulder press", "seated shoulder press"]
+  },
+  {
+    "id": "leg_press",
+    "name": "坐姿腿举",
+    "bodyParts": ["LEGS"],
+    "difficulty": "BEGINNER",
+    "caution": "调整座椅和脚位，让脚掌稳定贴住踏板；屈膝下降时腰背保持贴垫，避免膝盖内扣、臀部离垫或膝关节锁死。",
+    "sourceUrl": "https://www.nasm.org/resource-center/exercise-library/leg-press",
+    "checkedOn": "2026-09-23",
+    "videoUrl": "https://www.youtube.com/watch?v=cDGOn-yfKJA",
+    "illustrationName": "leg_press",
+    "keywords": ["腿举", "器械深蹲", "leg press", "machine squat"]
+  },
+  {
+    "id": "preacher_curl_machine",
+    "name": "牧师凳器械弯举",
+    "bodyParts": ["ARMS"],
+    "difficulty": "BEGINNER",
+    "caution": "调节座椅使上臂稳定贴在支撑垫上；缓慢弯举和下放，不要借力抬肩或在底部猛然伸直手肘。",
+    "sourceUrl": "https://www.acefitness.org/resources/everyone/exercise-library/184/seated-biceps-curl/",
+    "checkedOn": "2026-09-23",
+    "videoUrl": "https://www.youtube.com/watch?v=AR-oARBkYxI",
+    "illustrationName": "curl",
+    "keywords": ["器械弯举", "牧师凳弯举", "preacher curl", "machine curl"]
+  },
+  {
+    "id": "lat_pulldown",
+    "name": "坐姿高位下拉",
+    "bodyParts": ["BACK", "ARMS"],
+    "difficulty": "BEGINNER",
+    "caution": "调整大腿固定垫，双脚踩稳；先收紧肩胛再将把手拉向上胸，躯干保持稳定，避免大幅后仰或拉向颈后。",
+    "sourceUrl": "https://www.acefitness.org/resources/everyone/exercise-library/158/seated-lat-pulldown/",
+    "checkedOn": "2026-09-23",
+    "videoUrl": "https://www.youtube.com/watch?v=SALxEARiMkw",
+    "illustrationName": "lat_pulldown",
+    "keywords": ["高位下拉", "背阔肌下拉", "lat pulldown", "lat pull down"]
+  }
+]

@@ -1,0 +1,35 @@
+练序 离线训练助教 / Third-party notices
+
+1. Chinese Zipformer 14M (2023-02-23), int8 encoder/joiner
+   k2-fsa / icefall / Fangjun Kuang. Apache License 2.0.
+   https://huggingface.co/csukuangfj/sherpa-onnx-streaming-zipformer-zh-14M-2023-02-23
+   Apache license text: sherpa-onnx-Apache-2.0.txt
+
+2. Kokoro-82M v1.1-zh, int8 ONNX conversion
+   hexgrad / Kokoro contributors. Apache License 2.0.
+   https://huggingface.co/hexgrad/Kokoro-82M-v1.1-zh
+   ONNX conversion: https://github.com/k2-fsa/sherpa-onnx/tree/master/scripts/kokoro/v1.1-zh
+   Female voice ID 3 (zf_001); male voice ID 58 (zm_009).
+   Fixed prompt recordings were generated locally with this model.
+   License text: Kokoro-Apache-2.0.txt
+
+3. sherpa-onnx 1.12.26 (Android runtime)
+   Copyright Xiaomi Corporation and contributors. Apache License 2.0.
+   https://github.com/k2-fsa/sherpa-onnx/tree/v1.12.26
+   Runtime includes third-party components with their own terms:
+   ONNX Runtime — Microsoft, MIT; onnxruntime-MIT.txt.
+   CppJieba — Yanyi Wu and contributors, MIT; cppjieba-MIT.txt.
+   eSpeak NG for Piper — eSpeak NG contributors, GPL version 3;
+   espeak-ng-GPL-3.0.txt. Exact dependency source:
+   https://github.com/csukuangfj/espeak-ng/tree/f6fed6c58b5e0998b8e68c6610125e2d07d595a7
+   Dependency/build definitions:
+   https://github.com/k2-fsa/sherpa-onnx/tree/v1.12.26/cmake
+   The runtime as a whole must not be described as Apache-only.
+
+4. Weather data: Open-Meteo (CC BY 4.0), https://open-meteo.com/
+   https://creativecommons.org/licenses/by/4.0/
+   City/geocoding data: GeoNames, https://www.geonames.org/
+   This application formats WMO weather codes and temperatures into Chinese text.
+   Only city coordinates/search text are sent for weather requests; audio stays local.
+
+本地测试包包含 GPLv3 的 eSpeak NG 依赖。若对外再分发应用，必须遵守该组件及其组合使用的源码提供等许可要求；不能只按模型的 Apache-2.0 许可处理整个应用。运行库源码版本、模型来源与校验值见项目 tools/assistant/model-manifest.json 和 prepare-models.ps1。未对用户原有代码另行变更许可证。

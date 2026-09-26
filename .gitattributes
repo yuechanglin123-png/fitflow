@@ -1,0 +1,3 @@
+app/src/main/assets/assistant/tts/prompts/*.pcm binary
+app/src/main/assets/assistant/tts/prompts/*.json -text
+app/src/androidTest/assets/assistant/*.pcm binary
