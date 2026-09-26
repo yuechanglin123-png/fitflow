@@ -11,6 +11,7 @@ app/src/main/assets/assistant/tts/*
 !app/src/main/assets/assistant/tts/prompts/
 .model-cache/
 .kotlin/
+__pycache__/
 *.apk
 *.aab
 *.jks
