@@ -1,9 +1,9 @@
 package com.fitflow.training.assistant
 
-/** Only known same-pronunciation spellings of the full repeated wake phrase. */
+/** Require the exact wake name at the start of the utterance. */
 object AssistantSpeechText {
     private val punctuation=Regex("[\\s\\p{P}]")
-    private val wake=Regex("^小[练炼恋链]小[练炼恋链]")
+    private val wake=Regex("^铁蛋")
     fun normalize(text:String)=text.replace(punctuation,"")
     fun afterWake(text:String):String? {
         val clean=normalize(text)

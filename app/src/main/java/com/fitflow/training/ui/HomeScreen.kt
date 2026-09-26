@@ -59,7 +59,7 @@ fun HomeScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text("练序", style = MaterialTheme.typography.headlineLarge, fontWeight = FontWeight.Black, color = Ink)
+            Text("健身助手", style = MaterialTheme.typography.headlineLarge, fontWeight = FontWeight.Black, color = Ink)
             TextButton(onClick = onSettingsClick) { Text("设置") }
         }
         Text("安排今天，完成今天。", style = MaterialTheme.typography.titleLarge, color = Ink)

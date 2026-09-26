@@ -35,7 +35,7 @@ class AssistantControllerTest {
         val c=AssistantController(scope,{r},{t},{snapshot},{_,_->error("No command")},{"回答"},{VoiceChoice.FEMALE})
         try {
             c.enable();val oldError=r.errorCallback!!
-            r.emit(1,"小练小练")
+            r.emit(1,"铁蛋")
             assertEquals(AssistantStage.SPEAKING,c.state.value.stage)
             oldError("录音已关闭")
             assertEquals(AssistantStage.SPEAKING,c.state.value.stage)
@@ -48,7 +48,7 @@ class AssistantControllerTest {
         val scope=CoroutineScope(SupervisorJob()+Dispatchers.Unconfined)
         val c=AssistantController(scope,{r},{t},{snapshot},{_,_->count++;CommandResult(true,"完成")},{"回答"},{VoiceChoice.FEMALE})
         try {
-            c.enable(); r.emit(1,"小练小练")
+            c.enable(); r.emit(1,"铁蛋")
             assertEquals(AssistantStage.LISTENING,c.state.value.stage)
             delay(4500)
             assertEquals(AssistantStage.LISTENING,c.state.value.stage)
@@ -64,7 +64,7 @@ class AssistantControllerTest {
         val scope=CoroutineScope(SupervisorJob()+Dispatchers.Unconfined)
         val c=AssistantController(scope,{r},{t},{snapshot},{_,_->count++;CommandResult(true,"完成")},{"回答"},{VoiceChoice.FEMALE})
         try {
-            c.enable();r.emit(1,"小练小练");r.emit(2,"帮我那个一下")
+            c.enable();r.emit(1,"铁蛋");r.emit(2,"帮我那个一下")
             assertEquals("对不起，我没有听清，请再说一次",c.state.value.reply)
             assertEquals(AssistantStage.LISTENING,c.state.value.stage)
             r.emit(3,"完成本组")
@@ -77,7 +77,7 @@ class AssistantControllerTest {
         val scope=CoroutineScope(SupervisorJob()+Dispatchers.Unconfined)
         val c=AssistantController(scope,{r},{t},{snapshot},{_,_->error("No command")},{"回答"},{VoiceChoice.FEMALE})
         try {
-            c.enable();r.emit(1,"小练小练");r.emit(2,"没那个")
+            c.enable();r.emit(1,"铁蛋");r.emit(2,"没那个")
             delay(5200)
             assertEquals(AssistantStage.SPEAKING,c.state.value.stage)
             gate.complete(Unit);yield()
@@ -91,7 +91,7 @@ class AssistantControllerTest {
         val scope=CoroutineScope(SupervisorJob()+Dispatchers.Unconfined)
         val c=AssistantController(scope,{r},{t},{snapshot},{_,_->count++;CommandResult(true,"完成")},{"回答"},{VoiceChoice.FEMALE})
         try {
-            c.enable();r.emit(1,"小练小练");r.emit(2,"完成本组",false)
+            c.enable();r.emit(1,"铁蛋");r.emit(2,"完成本组",false)
             delay(5200)
             assertEquals(0,count)
             assertEquals("对不起，我没有听清，请再说一次",c.state.value.reply)
@@ -105,7 +105,7 @@ class AssistantControllerTest {
         val scope=CoroutineScope(SupervisorJob()+Dispatchers.Unconfined)
         val c=AssistantController(scope,{r},{t},{snapshot},{_,_->error("No command")},{"回答"},{VoiceChoice.FEMALE})
         try {
-            c.enable();r.emit(1,"小练小练");r.emit(2,"没那个")
+            c.enable();r.emit(1,"铁蛋");r.emit(2,"没那个")
             c.disable();gate.complete(Unit);yield()
             assertEquals(AssistantStage.OFF,c.state.value.stage)
             assertTrue(r.stopped)
@@ -116,7 +116,7 @@ class AssistantControllerTest {
         val scope=CoroutineScope(SupervisorJob()+Dispatchers.Unconfined)
         val c=AssistantController(scope,{r},{t},{current},{_,ctx->captured=ctx;CommandResult(true,"完成")},{"回答"},{VoiceChoice.FEMALE})
         try {
-            c.enable();r.emit(1,"小练小练")
+            c.enable();r.emit(1,"铁蛋")
             val oldCapture=r.callback!!
             current=current.copy(currentBlockId="next",revision=1)
             r.emit(2,"不清楚")
@@ -127,14 +127,14 @@ class AssistantControllerTest {
             assertEquals(1L,captured?.revision)
         } finally { c.close();scope.cancel() }
     }
-    @Test fun wakeHomophonesWorkButSingleNameAndQuotedWakeDoNot()=runBlocking {
+    @Test fun wakeRequiresExactPrefixAndRejectsQuotedWake()=runBlocking {
         val r=Recognizer(); val t=Synth(); var count=0
         val scope=CoroutineScope(SupervisorJob()+Dispatchers.Unconfined)
         val c=AssistantController(scope,{r},{t},{snapshot},{_,_->count++;CommandResult(true,"完成")},{"回答"},{VoiceChoice.FEMALE})
         try {
-            c.enable();r.emit(1,"小练完成本组");r.emit(2,"我说小练小练完成本组")
+            c.enable();r.emit(1,"蛋完成本组");r.emit(2,"我说铁蛋完成本组")
             assertEquals(0,count)
-            r.emit(3,"小炼小练，完成本组")
+            r.emit(3,"铁蛋，完成本组")
             assertEquals(1,count)
         } finally { c.close();scope.cancel() }
     }
@@ -144,10 +144,10 @@ class AssistantControllerTest {
         val c=AssistantController(scope, {r}, {t}, {snapshot}, {_,_-> count++; CommandResult(true,"完成")}, {"回答"}, {VoiceChoice.FEMALE})
         c.enable(); yield()
         r.emit(1,"完成本组")
-        r.emit(2,"小练小练完成本组",false)
+        r.emit(2,"铁蛋完成本组",false)
         assertEquals(0,count)
-        r.emit(3,"小练小练完成本组")
-        r.emit(3,"小练小练完成本组")
+        r.emit(3,"铁蛋完成本组")
+        r.emit(3,"铁蛋完成本组")
         assertEquals(1,count)
         c.disable(); scope.cancel()
     }
@@ -156,7 +156,7 @@ class AssistantControllerTest {
         val scope=CoroutineScope(SupervisorJob()+Dispatchers.Unconfined)
         val c=AssistantController(scope, {r}, {t}, {snapshot}, {_,_-> count++; CommandResult(true,"完成")}, {"回答"}, {VoiceChoice.MALE})
         c.enable(); yield(); c.disable()
-        r.emit(1,"小练小练完成本组")
+        r.emit(1,"铁蛋完成本组")
         assertEquals(0,count)
         assertTrue(r.stopped)
         assertFalse(c.state.value.enabled)
@@ -167,9 +167,9 @@ class AssistantControllerTest {
         val scope=CoroutineScope(SupervisorJob()+Dispatchers.Unconfined)
         val c=AssistantController(scope,{r},{t},{current},{_,ctx->captured=ctx;CommandResult(false,"已变化")},{"回答"},{VoiceChoice.FEMALE})
         c.enable(); yield()
-        r.emit(1,"小练小练",false)
+        r.emit(1,"铁蛋",false)
         current=current.copy(currentBlockId="next",revision=1)
-        r.emit(1,"小练小练完成本组")
+        r.emit(1,"铁蛋完成本组")
         assertEquals("b",captured?.blockId)
         c.close(); scope.cancel()
     }
@@ -185,7 +185,7 @@ class AssistantControllerTest {
         val gate=CompletableDeferred<String>(); val r=Recognizer(); val t=Synth()
         val scope=CoroutineScope(SupervisorJob()+Dispatchers.Unconfined)
         val c=AssistantController(scope,{r},{t},{snapshot},{_,_->error("No action")},{gate.await()},{VoiceChoice.FEMALE})
-        c.enable(); r.emit(1,"小练小练今天天气")
+        c.enable(); r.emit(1,"铁蛋今天天气")
         c.disable(); gate.complete("晴"); yield()
         assertTrue(t.spoken.isEmpty()); assertTrue(r.stopped); assertFalse(c.state.value.enabled)
         scope.cancel()
@@ -194,7 +194,7 @@ class AssistantControllerTest {
         val gate=CompletableDeferred<Unit>(); val r=Recognizer(); val t=Synth(gate); var current=snapshot
         val scope=CoroutineScope(SupervisorJob()+Dispatchers.Unconfined)
         val c=AssistantController(scope,{r},{t},{current},{_,_->current=current.copy(phase=Phase.FINISHED);CommandResult(true,"训练已完成，辛苦了")},{"回答"},{VoiceChoice.FEMALE})
-        c.enable();r.emit(1,"小练小练完成本组")
+        c.enable();r.emit(1,"铁蛋完成本组")
         assertTrue(c.state.value.enabled)
         assertEquals(AssistantStage.SPEAKING,c.state.value.stage)
         gate.complete(Unit);yield()

@@ -1,4 +1,4 @@
-练序 离线训练助教 / Third-party notices
+健身助手 离线训练助教 / Third-party notices
 
 1. Chinese Zipformer 14M (2023-02-23), int8 encoder/joiner
    k2-fsa / icefall / Fangjun Kuang. Apache License 2.0.

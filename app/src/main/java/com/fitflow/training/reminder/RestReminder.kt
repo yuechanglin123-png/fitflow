@@ -50,7 +50,7 @@ class RestReminder(private val context: Context) {
         val open=PendingIntent.getActivity(context,0,Intent(context,MainActivity::class.java),PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         val notification=Notification.Builder(context,CHANNEL).setSmallIcon(android.R.drawable.ic_popup_reminder)
             .setContentTitle(if(kind==RestKind.EXERCISE) "动作间休息结束" else "组间休息结束")
-            .setContentText(if(snapshot.phase==Phase.FINISHED) "训练已完成，查看总结" else if(kind==RestKind.EXERCISE) "下一个动作已就绪，返回练序继续训练" else "下一组已就绪，返回练序继续训练")
+            .setContentText(if(snapshot.phase==Phase.FINISHED) "训练已完成，查看总结" else if(kind==RestKind.EXERCISE) "下一个动作已就绪，返回健身助手继续训练" else "下一组已就绪，返回健身助手继续训练")
             .setContentIntent(open).setAutoCancel(true).build()
         notifications.notify(snapshot.id.hashCode(),notification)
     }

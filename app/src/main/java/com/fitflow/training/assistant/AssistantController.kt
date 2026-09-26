@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 enum class AssistantStage(val label: String) {
-    OFF("已关闭"), INITIALIZING("正在初始化"), WAITING("等待唤醒：小练小练"),
+    OFF("已关闭"), INITIALIZING("正在初始化"), WAITING("等待唤醒：铁蛋"),
     LISTENING("请在 5 秒内说指令"), PROCESSING("正在处理"), SPEAKING("正在播报"), ERROR("助教暂不可用")
 }
 data class AssistantUiState(val enabled: Boolean=false, val stage: AssistantStage=AssistantStage.OFF,
