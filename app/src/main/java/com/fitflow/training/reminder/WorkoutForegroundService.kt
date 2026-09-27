@@ -97,7 +97,7 @@ class WorkoutForegroundService : Service() {
         val builder = Notification.Builder(this, CHANNEL)
             .setSmallIcon(android.R.drawable.ic_media_play)
             .setContentTitle("健身助手 · 训练进行中")
-            .setContentText(if(microphone) "语音助教已开启 · 说“铁蛋铁蛋”唤醒" else "返回应用记录下一组并查看休息时间")
+            .setContentText(if(microphone) "语音助教已开启 · 说“你好教练”唤醒" else "返回应用记录下一组并查看休息时间")
             .setContentIntent(open)
             .setOngoing(true)
         if(microphone) {

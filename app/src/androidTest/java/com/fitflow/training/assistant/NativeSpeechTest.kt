@@ -14,6 +14,37 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 class NativeSpeechTest {
+    @Test fun streamingWakeIsAvailableBeforeTheFinalInstruction() {
+        val instrumentation=InstrumentationRegistry.getInstrumentation()
+        val bytes=instrumentation.context.assets.open("assistant/wake-complete-16k.pcm").use { it.readBytes() }
+        val shorts=ShortArray(bytes.size/2)
+        ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(shorts)
+        val engine=OnlineRecognizer(instrumentation.targetContext.assets,SherpaRecognizer.config())
+        val stream=engine.createStream(SherpaRecognizer.HOTWORDS)
+        var firstWake=-1
+        var finalResult=-1
+        val segments=StringBuilder()
+        try {
+            for(start in 0 until shorts.size+24000 step 800) {
+                stream.acceptWaveform(FloatArray(800) { if(start+it<shorts.size) shorts[start+it]/32768f else 0f },16000)
+                while(engine.isReady(stream)) engine.decode(stream)
+                val text=engine.getResult(stream).text.replace(" ","")
+                if(firstWake<0 && AssistantSpeechText.afterWake(text)!=null) firstWake=start+800
+                if(engine.isEndpoint(stream) && text.isNotBlank()) {
+                    segments.append(text)
+                    if(segments.toString()=="你好教练完成本组") {
+                        finalResult=start+800
+                        break
+                    }
+                    // A natural pause after the wake name is a separate segment in production.
+                    engine.reset(stream)
+                }
+            }
+            assertTrue("No partial wake result",firstWake>=0)
+            assertTrue("Wake should not wait for final command",finalResult>firstWake+1600)
+            android.util.Log.i("AssistantValidation","wakeBeforeFinalMs=${(finalResult-firstWake)*1000/16000}")
+        } finally { stream.release();engine.release() }
+    }
     @Test fun recognizesEverydayRestRequestWithAndWithoutNoise() {
         val instrumentation=InstrumentationRegistry.getInstrumentation()
         val engine=OnlineRecognizer(instrumentation.targetContext.assets,SherpaRecognizer.config())
@@ -68,7 +99,7 @@ class NativeSpeechTest {
             stream.acceptWaveform(FloatArray(shorts.size+16000) { if(it<shorts.size) shorts[it]/32768f else 0f },16000)
             stream.inputFinished()
             while(engine.isReady(stream)) engine.decode(stream)
-            assertEquals("铁蛋铁蛋完成本组",engine.getResult(stream).text.replace(" ",""))
+            assertEquals("你好教练完成本组",engine.getResult(stream).text.replace(" ",""))
         } finally { stream.release();engine.release() }
     }
     @Test fun bundledRecognizerFinishesCommandWithinOnePointThreeSecondsOfSilence() {
@@ -83,18 +114,22 @@ class NativeSpeechTest {
         try {
             val maxTrailingSamples=20800
             val total=lastVoice+1+maxTrailingSamples
-            for(start in 0 until total step 1600) {
-                val frame=FloatArray(minOf(1600,total-start)) { position ->
+            val segments=StringBuilder()
+            for(start in 0 until total step 800) {
+                val frame=FloatArray(minOf(800,total-start)) { position ->
                     val index=start+position
                     if(index<shorts.size) shorts[index]/32768f else 0f
                 }
                 stream.acceptWaveform(frame,16000)
                 while(engine.isReady(stream)) engine.decode(stream)
                 if(engine.isEndpoint(stream)) {
-                    assertEquals("铁蛋铁蛋完成本组",engine.getResult(stream).text.replace(" ",""))
-                    android.util.Log.i("AssistantValidation","endpointTrailingMs=${(start+frame.size-lastVoice)*1000/16000}")
-                    assertTrue("Endpoint took over 1.3 seconds",start+frame.size-lastVoice<=maxTrailingSamples)
-                    return
+                    segments.append(engine.getResult(stream).text.replace(" ",""))
+                    if(segments.toString()=="你好教练完成本组") {
+                        android.util.Log.i("AssistantValidation","endpointTrailingMs=${(start+frame.size-lastVoice)*1000/16000}")
+                        assertTrue("Endpoint took over 1.3 seconds",start+frame.size-lastVoice<=maxTrailingSamples)
+                        return
+                    }
+                    engine.reset(stream)
                 }
             }
             fail("No endpoint within 1.3 seconds of silence")

@@ -14,6 +14,8 @@ data class SpeechResult(val turnId: Long, val text: String, val isFinal: Boolean
 interface SpeechRecognizerAdapter {
     suspend fun initialize()
     fun start(onResult: (SpeechResult) -> Unit, onError: (String) -> Unit, onReady: () -> Unit)
+    /** Discard recognition while continuing to drain the open microphone. start resumes it. */
+    fun pauseRecognition()
     fun stop()
     fun close()
 }

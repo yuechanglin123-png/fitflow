@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 enum class AssistantStage(val label: String) {
-    OFF("已关闭"), INITIALIZING("正在初始化"), WAITING("等待唤醒：铁蛋铁蛋"),
+    OFF("已关闭"), INITIALIZING("正在初始化"), WAITING("等待唤醒：你好教练"),
     LISTENING("请在 5 秒内说指令"), PROCESSING("正在处理"), SPEAKING("正在播报"), ERROR("助教暂不可用")
 }
 data class AssistantUiState(val enabled: Boolean=false, val stage: AssistantStage=AssistantStage.OFF,
@@ -93,8 +93,10 @@ class AssistantController(
         timeout?.cancel();timeout=null
         recognizer?.start({ result -> scope.launch { if(capture==captureEpoch) onResult(g,result) } }, { message ->
             scope.launch {
-                val listening=state.value.stage in listOf(AssistantStage.WAITING,AssistantStage.LISTENING)
-                if(valid(g) && capture==captureEpoch && listening) fail(message)
+                // Capture remains active through processing and playback; errors still matter.
+                // Logical captures share the physical microphone, so a delayed hardware error
+                // still invalidates this enabled session. generation rejects disabled sessions.
+                if(valid(g)) fail(message)
             }
         }, {
             scope.launch {
@@ -128,32 +130,35 @@ class AssistantController(
         var text=AssistantSpeechText.normalize(result.text)
         if(text.isEmpty()) return
         if(currentStage==AssistantStage.LISTENING) text=AssistantWakeReplyFilter.userText(text) ?: return
-        if(currentStage==AssistantStage.LISTENING) partialText=text
-        val afterWake=AssistantSpeechText.afterWake(text)
+        val afterWake=AssistantSpeechText.afterWake(text)?.let {
+            // The acknowledgement may be captured in the same utterance as an early wake.
+            AssistantWakeReplyFilter.userText(it).orEmpty()
+        }
         if(currentStage==AssistantStage.WAITING && afterWake!=null && wakeResult!=result.turnId) {
             wakeResult=result.turnId
             context=snapshot()?.let { CommandContext.from(it,++nextTurn) }
+            if(!result.isFinal || afterWake.isEmpty()) {
+                // Keep the same stream: resetting here loses a command spoken after the wake name.
+                mutableState.value=state.value.copy(heard=result.text,reply="我在，请说指令",stage=AssistantStage.LISTENING)
+                partialText=afterWake
+                startCommandTimeout(g,captureEpoch)
+                startWakePrompt(g)
+            }
         }
+        if(state.value.stage==AssistantStage.LISTENING) partialText=afterWake ?: text
         if(!result.isFinal) return
         lastResult=result.turnId
         if(currentStage==AssistantStage.WAITING) {
             text=afterWake ?: return
         } else if(afterWake!=null) text=afterWake
-        if(currentStage==AssistantStage.WAITING && text.isEmpty()) {
-            mutableState.value=state.value.copy(heard=result.text,reply="我在，请说指令")
-            listen(g,AssistantStage.LISTENING) { startWakePrompt(g) }
-            return
-        }
+        // A final wake-only result following its partial must not prompt twice or consume the window.
+        if(text.isEmpty()) return
         mutableState.value=state.value.copy(heard=result.text,stage=AssistantStage.PROCESSING)
-        recognizer?.stop(); timeout?.cancel(); stopWakePrompt()
+        recognizer?.pauseRecognition(); timeout?.cancel(); stopWakePrompt()
         val commandContext=context
         val owner=parent ?: return
         scope.launch(owner) {
             try {
-                if(text.isEmpty()) {
-                    speak(g,"我在，请说指令",AssistantStage.LISTENING)
-                    return@launch
-                }
                 val intent=parser.parse(text)
                 if(intent==AssistantIntent.MultipleCommands) {
                     speak(g,"请一次只说一个指令",AssistantStage.LISTENING)
@@ -184,7 +189,7 @@ class AssistantController(
 
     private suspend fun speak(g:Long, text:String, afterwards:AssistantStage) {
         if(!valid(g)) return
-        recognizer?.stop()
+        recognizer?.pauseRecognition()
         mutableState.value=state.value.copy(stage=AssistantStage.SPEAKING,reply=text)
         synthesizer?.speak(text,voice())
         currentCoroutineContext().ensureActive()

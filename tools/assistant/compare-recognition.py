@@ -11,7 +11,7 @@ import numpy as np
 import soundfile as sf
 import sherpa_onnx
 
-HOTWORDS = '铁蛋铁蛋/跳过休息/延长三十秒休息时间/暂停训练/完成本组/现在练什么/今天天气/北京/上海'
+HOTWORDS = '你好教练/跳过休息/延长三十秒休息时间/暂停训练/完成本组/现在练什么/今天天气/北京/上海'
 EXPANDED_HOTWORDS = HOTWORDS + '/结束休息/延长休息三十秒/再休息三十秒/休息加三十秒/暂停一下训练/这一组做完了/现在几点/今天星期几/还剩几组/还要休息多久'
 
 def main():
@@ -21,6 +21,9 @@ def main():
     p.add_argument('--samples', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--modes', default='14m,14m-tuned,2025-greedy')
+    p.add_argument('--wake', default='你好教练')
+    p.add_argument('--score', type=float, default=2.0)
+    p.add_argument('--silence', type=float, default=0.45)
     p.add_argument('--fixtures',type=Path,help='Export selected independent PCM samples for Android regression tests')
     a = p.parse_args()
     entries = json.loads((a.samples/'samples.json').read_text(encoding='utf-8-sig'))
@@ -29,7 +32,7 @@ def main():
         if sr != 16000:
             x = np.interp(np.arange(round(len(x)*16000/sr))*sr/16000,np.arange(len(x)),x).astype(np.float32)
         return x
-    babble = np.concatenate([load(e['file']) for e in entries if e['negative'] and not e['text'].startswith('铁蛋铁蛋')])
+    babble = np.concatenate([load(e['file']) for e in entries if e['negative'] and not e['text'].startswith(a.wake)])
     rng = np.random.default_rng(20260924)
     cases = []
     for entry in entries:
@@ -62,18 +65,25 @@ def main():
         asr = sherpa_onnx.OnlineRecognizer.from_transducer(
             tokens=str(path/'tokens.txt'),encoder=str(path/names[0]),decoder=str(path/names[1]),joiner=str(path/names[2]),
             num_threads=2,sample_rate=16000,feature_dim=80,decoding_method='greedy_search' if greedy else 'modified_beam_search',
-            modeling_unit='cjkchar',hotwords_score=2.0 if tuned else 1.5,enable_endpoint_detection=True,rule2_min_trailing_silence=0.65)
+            modeling_unit='cjkchar',hotwords_score=a.score if tuned else 1.5,enable_endpoint_detection=True,rule2_min_trailing_silence=a.silence)
         init = time.perf_counter()-start
         rows = []
         for entry,kind,x in cases:
             start = time.perf_counter()
-            stream = asr.create_stream() if greedy else asr.create_stream(hotwords=EXPANDED_HOTWORDS if tuned else HOTWORDS)
+            stream = asr.create_stream() if greedy else asr.create_stream(hotwords=(EXPANDED_HOTWORDS if tuned else HOTWORDS).replace('你好教练',a.wake))
             parts = []
+            first_wake = None
+            wake_final = None
             signal = np.concatenate([x,np.zeros(16000,dtype=np.float32)])
-            for i in range(0,len(signal),1600):
-                stream.accept_waveform(16000,signal[i:i+1600])
+            for i in range(0,len(signal),800):
+                stream.accept_waveform(16000,signal[i:i+800])
                 while asr.is_ready(stream): asr.decode_stream(stream)
+                current_text = asr.get_result(stream).replace(' ','')
+                if first_wake is None and current_text.startswith(a.wake):
+                    first_wake = (i + min(800,len(signal)-i))/16000
                 if asr.is_endpoint(stream):
+                    if first_wake is not None and wake_final is None:
+                        wake_final = (i + min(800,len(signal)-i))/16000
                     parts.append(asr.get_result(stream)); asr.reset(stream)
             stream.input_finished()
             while asr.is_ready(stream): asr.decode_stream(stream)
@@ -81,7 +91,8 @@ def main():
             text = ''.join(parts).replace(' ','')
             expected = re.sub(r'[\s，。！？、]','',entry['text'])
             rows.append(dict(**entry,condition=kind,recognized=text,segments=[s for s in parts if s],
-                exact=text==expected,seconds=time.perf_counter()-start,audioSeconds=len(x)/16000))
+                exact=text==expected,seconds=time.perf_counter()-start,audioSeconds=len(x)/16000,
+                firstWakeSeconds=first_wake,wakeFinalSeconds=wake_final))
         report = dict(model=label,initializationSeconds=init,samples=rows)
         reports.append(report)
         a.output.write_text(json.dumps(reports,ensure_ascii=False,indent=2),encoding='utf-8')

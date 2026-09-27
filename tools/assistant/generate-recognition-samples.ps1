@@ -14,6 +14,7 @@ $phrases = @(
     '铁蛋铁蛋，完成本组然后暂停训练', '铁蛋铁蛋，延长十三秒',
     '我们一起喝杯水', '这首歌很好听', '我正在做深蹲', '今天工作怎么样'
 )
+$phrases = $phrases | ForEach-Object { $_.Replace('铁蛋铁蛋', '你好教练') }
 $rows = @()
 foreach ($name in @('Huihui','Kangkang')) {
     $voice = New-Object -ComObject SAPI.SpVoice

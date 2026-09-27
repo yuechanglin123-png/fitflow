@@ -5,8 +5,12 @@ import org.junit.Test
 
 class AssistantSpeechTextTest {
     @Test fun newWakeCanPrefixAnInstruction() {
-        assertEquals("完成本组", AssistantSpeechText.afterWake("铁蛋铁蛋，完成本组"))
-        assertEquals("", AssistantSpeechText.afterWake("铁蛋铁蛋"))
+        assertEquals("完成本组", AssistantSpeechText.afterWake("你好教练，完成本组"))
+        assertEquals("", AssistantSpeechText.afterWake("你 好，教 练！"))
+        assertNull(AssistantSpeechText.afterWake("你好"))
+        assertNull(AssistantSpeechText.afterWake("教练"))
+        assertNull(AssistantSpeechText.afterWake("我说你好教练完成本组"))
+        assertNull(AssistantSpeechText.afterWake("铁蛋铁蛋"))
         assertNull(AssistantSpeechText.afterWake("铁蛋，完成本组"))
         assertNull(AssistantSpeechText.afterWake("铁蛋"))
     }

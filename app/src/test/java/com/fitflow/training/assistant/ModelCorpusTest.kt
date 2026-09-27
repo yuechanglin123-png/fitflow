@@ -18,7 +18,7 @@ class ModelCorpusTest {
             if(expected=="EXTEND_REST_30" || expected=="REST_REMAINING") return@forEach
             // Historical ASR fixtures were recorded with the retired wake name.
             // Substitute only that exact prefix to keep testing command parsing.
-            val recognized=s["recognized"]!!.jsonPrimitive.content.replaceFirst(Regex("^小练小练"),"铁蛋铁蛋")
+            val recognized=s["recognized"]!!.jsonPrimitive.content.replaceFirst(Regex("^小练小练"),"你好教练")
             val afterWake=AssistantSpeechText.afterWake(recognized)
             val command=if(s["requiresWake"]!!.jsonPrimitive.boolean) afterWake else recognized
             val intent=parser.parse(command.orEmpty())

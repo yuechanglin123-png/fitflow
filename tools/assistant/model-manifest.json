@@ -1931,103 +1931,103 @@
     },
     {
       "path": "app/src/main/assets/assistant/tts/prompts/female-complete.pcm",
-      "bytes": 164198,
-      "sha256": "5a6c4876640d27799d6c592951bb5b248d2a3c307be02913083a5a62e673dcdd"
+      "bytes": 148998,
+      "sha256": "2b4c6584053866452f94b0c66db8fc72c20338ee802fe498764417290812866b"
     },
     {
       "path": "app/src/main/assets/assistant/tts/prompts/female-encourage.pcm",
-      "bytes": 220538,
-      "sha256": "b7721c768b466c9aef513163b9ea44bffa31d892bf0b5d7c3730956ba6c95e62"
+      "bytes": 205304,
+      "sha256": "e5468ccfae141c9a7bada3ddeddd31feaece507bcfb122cbbfcc52c0f68cdf0f"
     },
     {
       "path": "app/src/main/assets/assistant/tts/prompts/female-exercise.pcm",
-      "bytes": 174500,
-      "sha256": "4d532cfd451dddf8940f0150d0eeb12fc633464437e080f34b34f3515d6695a2"
+      "bytes": 156876,
+      "sha256": "88e0d2046aeb66011a27e42494ba100effdc755756eb6558c60d17f1b0843b75"
     },
     {
       "path": "app/src/main/assets/assistant/tts/prompts/female-extend.pcm",
-      "bytes": 106940,
-      "sha256": "315549384bffb7d6d003dec479ea01e8b6b65df9bb664c24e8e444d0f9b00e16"
+      "bytes": 97350,
+      "sha256": "fe8b3cc5c40a094ed6474fe910a2f10b6fb7e69e007ca951a9a31b829459e190"
     },
     {
       "path": "app/src/main/assets/assistant/tts/prompts/female-finish.pcm",
-      "bytes": 107152,
-      "sha256": "ff1008dd9f71e8cf2e1c64a1aea7faca6061a2037d6f2d7531e749fd65677dc5"
+      "bytes": 98640,
+      "sha256": "7f8c0caa75622eeb1c646073c5d991e9d02a89200848cc00d87d53f2d07f22b2"
     },
     {
       "path": "app/src/main/assets/assistant/tts/prompts/female-pause.pcm",
-      "bytes": 75876,
-      "sha256": "fd9cd5187da1e86ca9d11ad37ba1b428790473ad33863cb99b1235b6bc1dc900"
+      "bytes": 72542,
+      "sha256": "aa6186e8f16c762dda1f103fe2ccdd25c28c9f2ee6eb4e145f8f2ad3d89c2f5a"
     },
     {
       "path": "app/src/main/assets/assistant/tts/prompts/female-prepare.pcm",
-      "bytes": 191022,
-      "sha256": "f630e633ecd28f0238ab62a768f2adfe3320be6259092fef787f23c99b3f7115"
+      "bytes": 170402,
+      "sha256": "39eb907221989d27d393b727e4dd74c62e057b82d2db594e1d1bf572f0cbdf01"
     },
     {
       "path": "app/src/main/assets/assistant/tts/prompts/female-skip.pcm",
-      "bytes": 158074,
-      "sha256": "db1ff95af7388f1006ccb72a5c701c97e42dfaa51de8494f45969a4d90039566"
+      "bytes": 143446,
+      "sha256": "693ff81c79e5535ac4b1bccfca4165f6e07e544eaedc06843ad723ffcb25f195"
     },
     {
       "path": "app/src/main/assets/assistant/tts/prompts/female-unsupported.pcm",
-      "bytes": 184914,
-      "sha256": "1957ecaecee7b239be5c95d23c34a69877168d48f5674c2334961dd055bd434b"
+      "bytes": 166850,
+      "sha256": "fca1084409e13f9970d040225cc573597a21bb9253262d0f904f266f5a988efc"
     },
     {
       "path": "app/src/main/assets/assistant/tts/prompts/female-wake.pcm",
-      "bytes": 98734,
-      "sha256": "0a2237f85f5c7c76da9c88d023b5969210b3d5a728142f492b9d1c71a9c1e834"
+      "bytes": 88574,
+      "sha256": "64543467a8ee09307867cb9b0ef04c120a005604c57c6768049620be6d7a6feb"
     },
     {
       "path": "app/src/main/assets/assistant/tts/prompts/male-complete.pcm",
-      "bytes": 170866,
-      "sha256": "89bac182b56e8e8beb323ca22e3f04e5b73b97335986c8ae1b47b7b7dbf3603a"
+      "bytes": 151082,
+      "sha256": "17c33f8c49af0a5d4e3e233f5e5f3b6db68ae7df32cda6071622a7f3498a8dec"
     },
     {
       "path": "app/src/main/assets/assistant/tts/prompts/male-encourage.pcm",
-      "bytes": 230818,
-      "sha256": "f3f82207d669c88b2b9575c53c5785cc7c245b653faafbed3aa9fc70c0097827"
+      "bytes": 211066,
+      "sha256": "4539dc1899aeb7ae7798462210aec682dcfd661c9f092118becb9e7b618a1c00"
     },
     {
       "path": "app/src/main/assets/assistant/tts/prompts/male-exercise.pcm",
-      "bytes": 177654,
-      "sha256": "6fd424dfbe5c27dcf8862aadd1691a1eb43d65712f05df7ab915ea0f6492dd78"
+      "bytes": 160412,
+      "sha256": "c64e4cc4cf4a7d254c589c20bcab201cd458b78d57e970eebcc0bb42e5b2c115"
     },
     {
       "path": "app/src/main/assets/assistant/tts/prompts/male-extend.pcm",
-      "bytes": 109338,
-      "sha256": "ea1e50503ca9ed95ce6bfc189eeea0f29c8173ef6c608bd2bd4d234d56b6d77e"
+      "bytes": 101364,
+      "sha256": "f41d27eaa896e2e028ff6f91099ffc99c98129a297524fd21ddf92ae6c616e76"
     },
     {
       "path": "app/src/main/assets/assistant/tts/prompts/male-finish.pcm",
-      "bytes": 107032,
-      "sha256": "d0afe6943c8b6205b857e1c40f301a18c96bec5d7d93bd430f6de955c0241ca9"
+      "bytes": 97622,
+      "sha256": "574a8983814dd048ed6206aa4556c56216e8cf46549377b79f41a458eb640622"
     },
     {
       "path": "app/src/main/assets/assistant/tts/prompts/male-pause.pcm",
-      "bytes": 78484,
-      "sha256": "4d7442a6393fefcbb9bf8c23ba322bb98fb0a05fc57dcec26f07ce1c54da4b59"
+      "bytes": 74062,
+      "sha256": "5dad589324f97da079a147ed0e4007fee863ec321e0f6afb0b102a9cb3853049"
     },
     {
       "path": "app/src/main/assets/assistant/tts/prompts/male-prepare.pcm",
-      "bytes": 194910,
-      "sha256": "d0d7ff4378a3848cb7fb0c4954d64de05ed09c278a4ac08ebc4374e616f82a48"
+      "bytes": 177162,
+      "sha256": "9d4638e5210f6da986a312948e3d1ddebd8157ab33b2f4d4c297dfd2809a09c8"
     },
     {
       "path": "app/src/main/assets/assistant/tts/prompts/male-skip.pcm",
-      "bytes": 161628,
-      "sha256": "9aab056115d89fb52d37257aae38761857274634597fd0eb1ea0704080d49d25"
+      "bytes": 145838,
+      "sha256": "17490f71ae4f2cbfa566abc3a8fdb2c2d0836b323d73b7d70f85253e7f3cf011"
     },
     {
       "path": "app/src/main/assets/assistant/tts/prompts/male-unsupported.pcm",
-      "bytes": 191198,
-      "sha256": "4ac54f35e7ebdda5725d0a810703e4c0a0625b000055b4486ef6586ae9b7621b"
+      "bytes": 176444,
+      "sha256": "1324ab215d42ed7aad138f03db40e6c10041e54cba886509e4280b6dd715b7fb"
     },
     {
       "path": "app/src/main/assets/assistant/tts/prompts/male-wake.pcm",
-      "bytes": 96938,
-      "sha256": "1a79eb1b0b24595d39c9bd6594f86f6256e71ae21af8e4a9117b6aac92a3931a"
+      "bytes": 87662,
+      "sha256": "6d35bf41a5861c0e73c0bfdc2d99c14da2bddae97c3a38a046364015d0c72d8c"
     },
     {
       "path": "app/src/main/assets/assistant/tts/prompts/prompts.json",
