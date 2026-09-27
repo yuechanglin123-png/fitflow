@@ -10,6 +10,7 @@ import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.assertCountEquals
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import android.content.Context
@@ -100,13 +101,15 @@ class CheckInScreenTest {
         rule.onNodeWithText("动作间休息：150 秒").assertExists()
     }
 
-    @Test fun pastDayCanOpenBackfillEditor() {
+    @Test fun backfillOnlyOffersStrengthCategory() {
         val date = LocalDate.now().minusDays(2)
         rule.setContent { CheckInScreen(onBack = {}) }
         selectDate(date)
         rule.onNodeWithText("补卡这一天").performClick()
         rule.onNodeWithText("添加训练动作").assertExists()
-        rule.onNodeWithText("有氧运动").assertExists()
+        rule.onNodeWithText("力量训练").assertExists()
+        rule.onAllNodesWithText("徒手训练").assertCountEquals(0)
+        rule.onAllNodesWithText("有氧运动").assertCountEquals(0)
     }
 
     @Test fun backfillSavesCustomActionSmallCardAndCompletedGroup() {
@@ -115,7 +118,6 @@ class CheckInScreenTest {
         rule.setContent { CheckInScreen(onBack = {}) }
         selectDate(date)
         rule.onNodeWithText("补卡这一天").performClick()
-        rule.onNodeWithText("徒手训练").performClick()
         rule.onNodeWithText("添加训练动作").performClick()
         rule.onNodeWithText("动作名称").performTextInput("引体向上")
         rule.onNodeWithText("添加").performClick()
@@ -127,7 +129,7 @@ class CheckInScreenTest {
         rule.onNodeWithText("动作间休息（秒）").performTextInput("90")
         rule.onNodeWithText("保存打卡").performScrollTo().performClick()
         rule.waitUntil(10_000) { rule.onAllNodesWithText("训练完成度：1 / 1 组（100%）").fetchSemanticsNodes().isNotEmpty() }
-        rule.onNodeWithText("打卡类别：徒手训练").assertExists()
+        rule.onNodeWithText("打卡类别：力量训练").assertExists()
         rule.onNodeWithText("引体向上").assertExists()
         val saved = runBlocking { WorkoutRepository.open(ApplicationProvider.getApplicationContext<Context>()).listCheckIns().first { it.date == date } }
         assertEquals(90, saved.planSnapshot.exercises.single().exerciseRestSeconds)
@@ -138,11 +140,14 @@ class CheckInScreenTest {
         val plan = WorkoutPlan(date, listOf(PlannedExercise("old-action", null, "旧动作", listOf(
             PlannedBlock("old-set", BigDecimal("10"), 1, 8, 60, ""),
         ))))
-        runBlocking { WorkoutRepository.open(ApplicationProvider.getApplicationContext<Context>()).saveCheckIn(CheckIn(date, listOf("old-library"), plan)) }
+        runBlocking { WorkoutRepository.open(ApplicationProvider.getApplicationContext<Context>()).saveCheckIn(
+            CheckIn(date, listOf("old-library"), plan, TrainingCategory.BODYWEIGHT)
+        ) }
         rule.setContent { CheckInScreen(onBack = {}) }
         selectDate(date)
         rule.onNodeWithText("编辑打卡").performScrollTo().performClick()
-        rule.onNodeWithText("徒手训练").performClick()
+        rule.onAllNodesWithText("徒手训练").assertCountEquals(0)
+        rule.onAllNodesWithText("有氧运动").assertCountEquals(0)
         rule.onNodeWithText("保存打卡").performScrollTo().performClick()
         rule.waitUntil(10_000) { rule.onAllNodesWithText("打卡类别：徒手训练").fetchSemanticsNodes().isNotEmpty() }
         rule.onNodeWithText("训练完成度：未记录").assertExists()

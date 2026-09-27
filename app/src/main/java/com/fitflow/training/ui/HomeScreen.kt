@@ -74,8 +74,6 @@ fun HomeScreen(
         ModuleCard("力量训练", "规划动作 · 逐组计时 · 训练后拉伸", true, onStrengthClick)
         if (canResume) TextButton(onClick = onResumeClick) { Text("继续上次训练") }
         if (hasPendingSummary) TextButton(onClick = onOpenFinish) { Text("查看未打卡的训练总结") }
-        ModuleCard("徒手健身", "即将开放", false, {})
-        ModuleCard("有氧运动", "即将开放", false, {})
         if (recentDates.isNotEmpty()) Text("最近打卡：${recentDates.joinToString(" · ")}")
         TextButton(onClick = onCheckinsClick) { Text("查看每日打卡") }
     }

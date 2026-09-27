@@ -84,7 +84,7 @@ internal fun CheckInEditor(
         Text("补卡 · $date", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
         Text("训练类别", style = MaterialTheme.typography.titleMedium)
         Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-            TrainingCategory.entries.forEach { option ->
+            listOf(TrainingCategory.STRENGTH).forEach { option ->
                 FilterChip(selected = category == option, onClick = { category = option }, label = { Text(option.label) })
             }
         }
