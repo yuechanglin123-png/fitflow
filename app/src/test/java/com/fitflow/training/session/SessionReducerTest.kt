@@ -78,4 +78,19 @@ class SessionReducerTest {
         assertEquals(Phase.READY, next.phase)
         assertEquals("next-set", next.currentBlockId)
     }
+
+    @Test fun finishEarlyPreservesProgressAndClearsActiveTrainingState() {
+        val resting = SessionReducer.completeSet(SessionReducer.start(plan, "finish-early"), 1_000)
+        val paused = SessionReducer.pause(resting, 2_000)
+
+        val finished = SessionReducer.finishEarly(paused)
+
+        assertEquals(Phase.FINISHED, finished.phase)
+        assertEquals(1, finished.completedBlockSets["b"])
+        assertEquals(null, finished.currentBlockId)
+        assertEquals(null, finished.restEndsAtEpochMs)
+        assertEquals(null, finished.restKind)
+        assertEquals(false, finished.isPaused)
+        assertEquals(null, finished.pausedRestRemainingMillis)
+    }
 }

@@ -96,14 +96,28 @@ fun SessionScreen(onBack: () -> Unit, onFinish: () -> Unit) {
         TextButton(onClick = onBack) { Text("返回今日计划") }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text("训练中", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
-            if (snapshot != null && snapshot.phase != Phase.FINISHED) Button(
-                onClick = { scope.launch { if (snapshot.isPaused) model.resumeTraining() else model.pause() } },
-                modifier = Modifier.size(64.dp).testTag("pause-training-button").semantics {
-                    contentDescription = if (snapshot.isPaused) "继续训练" else "暂停训练"
-                },
-                shape = CircleShape,
-                contentPadding = PaddingValues(0.dp),
-            ) { PauseResumeIcon(isPaused = snapshot.isPaused) }
+            if (snapshot != null && snapshot.phase != Phase.FINISHED) Row(
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                Button(
+                    onClick = { scope.launch { if (snapshot.isPaused) model.resumeTraining() else model.pause() } },
+                    modifier = Modifier.size(64.dp).testTag("pause-training-button").semantics {
+                        contentDescription = if (snapshot.isPaused) "继续训练" else "暂停训练"
+                    },
+                    shape = CircleShape,
+                    contentPadding = PaddingValues(0.dp),
+                ) { PauseResumeIcon(isPaused = snapshot.isPaused) }
+                Button(
+                    onClick = { scope.launch {
+                        model.finishEarly()
+                        com.fitflow.training.assistant.AssistantRuntime.get(context).controller.disable()
+                        WorkoutForegroundService.stop(context)
+                        onFinish()
+                    } },
+                    modifier = Modifier.size(width = 88.dp, height = 64.dp).testTag("finish-training-button"),
+                    contentPadding = PaddingValues(horizontal = 8.dp),
+                ) { Text("结束训练") }
+            }
         }
         if (snapshot == null) {
             Text("尚未开始训练")

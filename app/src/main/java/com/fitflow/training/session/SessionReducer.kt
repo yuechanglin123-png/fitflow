@@ -66,6 +66,17 @@ object SessionReducer {
             restPreparationAnnounced = false)
     }
 
+    fun finishEarly(snapshot: SessionSnapshot): SessionSnapshot = snapshot.copy(
+        phase = Phase.FINISHED,
+        currentBlockId = null,
+        restEndsAtEpochMs = null,
+        restReady = false,
+        restKind = null,
+        isPaused = false,
+        pausedRestRemainingMillis = null,
+        restPreparationAnnounced = false,
+    )
+
     fun pause(snapshot: SessionSnapshot, nowMs: Long): SessionSnapshot {
         if (snapshot.phase == Phase.FINISHED || snapshot.isPaused) return snapshot
         val remaining = if (snapshot.phase == Phase.RESTING)

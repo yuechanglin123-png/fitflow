@@ -93,6 +93,7 @@ class SessionViewModel(private val repository: WorkoutRepository, private val re
     suspend fun reconcile() = lock.withLock { mutableSession.value?.let { reconcileLocked(it) }; Unit }
     suspend fun pause() = mutate { SessionReducer.pause(it, epochTime()) }
     suspend fun resumeTraining() = mutate { SessionReducer.resume(it, epochTime()) }
+    suspend fun finishEarly() = mutate { SessionReducer.finishEarly(it) }
 
     suspend fun executeAssistant(command: TrainingCommand, context: CommandContext): CommandResult = lock.withLock {
         val original = mutableSession.value ?: return@withLock CommandResult(false, "尚未开始训练")
