@@ -1,6 +1,8 @@
 package com.fitflow.training.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,6 +42,7 @@ fun HomeScreen(
     onResumeClick: () -> Unit,
     onOpenFinish: () -> Unit,
     onCheckinsClick: () -> Unit,
+    onTutorialClick: () -> Unit,
     onSettingsClick: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -55,7 +58,8 @@ fun HomeScreen(
         recentDates = checked.take(3).map { it.date.toString() }
     }
     Column(
-        modifier = Modifier.fillMaxSize().background(Sand).padding(horizontal = 22.dp, vertical = 28.dp),
+        modifier = Modifier.fillMaxSize().background(Sand).verticalScroll(rememberScrollState())
+            .padding(horizontal = 22.dp, vertical = 28.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
@@ -63,7 +67,10 @@ fun HomeScreen(
             TextButton(onClick = onSettingsClick) { Text("设置") }
         }
         Text("安排今天，完成今天。", style = MaterialTheme.typography.titleLarge, color = Ink)
-        Text("选择训练方式", style = MaterialTheme.typography.titleMedium, color = Ink)
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            Text("选择训练方式", style = MaterialTheme.typography.titleMedium, color = Ink)
+            TextButton(onClick = onTutorialClick) { Text("新手教程") }
+        }
         ModuleCard("力量训练", "规划动作 · 逐组计时 · 训练后拉伸", true, onStrengthClick)
         if (canResume) TextButton(onClick = onResumeClick) { Text("继续上次训练") }
         if (hasPendingSummary) TextButton(onClick = onOpenFinish) { Text("查看未打卡的训练总结") }

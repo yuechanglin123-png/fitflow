@@ -28,7 +28,7 @@ class PendingSummaryTest {
             PlannedExercise("pending-parent", null, "测试", listOf(PlannedBlock("pending-block", BigDecimal.ZERO, 1, 8, 0, "")))
         ))
         WorkoutRepository.open(context).saveSession(SessionSnapshot(UUID.randomUUID().toString(), plan, mapOf("pending-block" to 1), Phase.FINISHED, null, null))
-        rule.setContent { HomeScreen(onStrengthClick = {}, onResumeClick = {}, onOpenFinish = {}, onCheckinsClick = {}, onSettingsClick = {}) }
+        rule.setContent { HomeScreen(onStrengthClick = {}, onResumeClick = {}, onOpenFinish = {}, onCheckinsClick = {}, onTutorialClick = {}, onSettingsClick = {}) }
         rule.waitUntil(5000) { rule.onAllNodesWithText("查看未打卡的训练总结").fetchSemanticsNodes().isNotEmpty() }
         rule.onNodeWithText("查看未打卡的训练总结").assertExists()
         Unit

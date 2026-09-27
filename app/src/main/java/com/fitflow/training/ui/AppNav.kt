@@ -23,6 +23,7 @@ object Routes {
     const val FINISH = "finish"
     const val CHECKIN = "checkin"
     const val SETTINGS = "settings"
+    const val TUTORIAL = "tutorial"
     const val PRESETS = "presets"
     const val PRESET_EDIT = "preset_edit"
 }
@@ -87,6 +88,7 @@ fun AppNav() {
             onResumeClick = { navigate(Routes.SESSION) },
             onOpenFinish = { navigate(Routes.FINISH) },
             onCheckinsClick = { navigate(Routes.CHECKIN) },
+            onTutorialClick = { navigate(Routes.TUTORIAL) },
             onSettingsClick = { navigate(Routes.SETTINGS) },
         )
         Routes.CATALOG -> CatalogScreen(
@@ -114,6 +116,7 @@ fun AppNav() {
         Routes.FINISH -> FinishScreen(onCheckIn = { navigate(Routes.CHECKIN) }, onBack = ::back)
         Routes.CHECKIN -> CheckInScreen(onBack = ::back)
         Routes.SETTINGS -> SettingsScreen(onBack = ::back)
+        Routes.TUTORIAL -> TutorialScreen(onBack = ::back)
         Routes.PRESETS -> PresetListScreen(
             onBack = ::back,
             onEditSlot = { navigate(Routes.PRESET_EDIT, presetSlot = it) },
