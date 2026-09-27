@@ -175,6 +175,23 @@ class NativeSpeechTest {
             assertTrue("AudioTrack released before tail drained: $elapsed ms",elapsed>=durationMs+150)
         } finally { synthesizer.close() }
     }
+    @Test fun cachedCommandReplyAddsLessThanTwoHundredSeventyFiveMilliseconds()=runBlocking {
+        val context=InstrumentationRegistry.getInstrumentation().targetContext
+        val bytes=context.assets.open("assistant/tts/prompts/female-pause.pcm").use { it.readBytes() }
+        val durationMs=bytes.size/2*1000L/24000
+        val synthesizer=SherpaSynthesizer(context)
+        try {
+            synthesizer.initialize()
+            // Warm the Android audio route so this measures our per-command path.
+            synthesizer.speak("训练已暂停",VoiceChoice.FEMALE)
+            val start=android.os.SystemClock.elapsedRealtime()
+            synthesizer.speak("训练已暂停",VoiceChoice.FEMALE)
+            val elapsed=android.os.SystemClock.elapsedRealtime()-start
+            val overhead=elapsed-durationMs
+            android.util.Log.i("AssistantValidation","cachedCommandReplyOverheadMs=$overhead")
+            assertTrue("Cached reply overhead was $overhead ms",overhead<275)
+        } finally { synthesizer.close() }
+    }
     @Test fun assistantStartupDoesNotLoadLargeDynamicVoiceModel()=runBlocking {
         val context=InstrumentationRegistry.getInstrumentation().targetContext
         val synthesizer=SherpaSynthesizer(context)

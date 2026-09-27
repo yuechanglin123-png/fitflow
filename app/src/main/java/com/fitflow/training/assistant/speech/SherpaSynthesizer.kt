@@ -20,10 +20,22 @@ class SherpaSynthesizer(private val context:Context):SpeechSynthesizerAdapter {
     @Volatile private var track:AudioTrack?=null
     private var model:OfflineTts?=null
     private var prompts=emptyMap<String,String>()
+    private var cachedPrompts=emptyMap<Pair<VoiceChoice,String>,ShortArray>()
     override suspend fun initialize()=withContext(dispatcher) {
         ensureActive(); check(!closed)
         prompts=Json.parseToJsonElement(context.assets.open("assistant/tts/prompts/prompts.json").bufferedReader().use { it.readText() })
             .jsonObject.map { (key,value)->value.jsonPrimitive.content to key }.toMap()
+        cachedPrompts=buildMap {
+            VoiceChoice.entries.forEach { voice -> prompts.values.forEach { name ->
+                ensureActive()
+                val path="assistant/tts/prompts/${if(voice==VoiceChoice.MALE) "male" else "female"}-$name.pcm"
+                val bytes=context.assets.open(path).use { it.readBytes() }
+                val samples=ShortArray(bytes.size/2)
+                ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(samples)
+                put(voice to name,samples)
+            } }
+        }
+        track=createAudioTrack()
         Unit
     }
     override suspend fun speak(text:String,voice:VoiceChoice) {
@@ -32,13 +44,11 @@ class SherpaSynthesizer(private val context:Context):SpeechSynthesizerAdapter {
             ensureActive()
             if(closed || epoch!=generation.get()) return@withContext
             val cached=prompts[text]
+            val cachedSamples=cached?.let { cachedPrompts[voice to it] }
             val engine=if(cached==null) model ?: OfflineTts(context.assets,prepareConfig(context)).also { model=it } else null
             if(closed || epoch!=generation.get()) return@withContext
-            val minimum=AudioTrack.getMinBufferSize(24000,AudioFormat.CHANNEL_OUT_MONO,AudioFormat.ENCODING_PCM_16BIT)
-            val audio=AudioTrack.Builder().setAudioAttributes(AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ASSISTANCE_ACCESSIBILITY).setContentType(AudioAttributes.CONTENT_TYPE_SPEECH).build())
-                .setAudioFormat(AudioFormat.Builder().setSampleRate(24000).setChannelMask(AudioFormat.CHANNEL_OUT_MONO).setEncoding(AudioFormat.ENCODING_PCM_16BIT).build())
-                .setBufferSizeInBytes(maxOf(minimum,24000)).setTransferMode(AudioTrack.MODE_STREAM).build()
-            track=audio
+            val audio=checkNotNull(track)
+            val playbackBase=audio.playbackHeadPosition.toLong() and 0xffffffffL
             var written=0L
             var audioFailure:Throwable?=null
             fun output(samples:ShortArray):Boolean {
@@ -53,14 +63,10 @@ class SherpaSynthesizer(private val context:Context):SpeechSynthesizerAdapter {
             try {
                 if(epoch!=generation.get() || closed) return@withContext
                 // Prime the audio route before the first syllable reaches the speaker.
-                output(ShortArray(2400))
-                audio.play()
+                if(audio.playState!=AudioTrack.PLAYSTATE_PLAYING) audio.play()
+                output(ShortArray(240))
                 if(cached!=null) {
-                    val path="assistant/tts/prompts/${if(voice==VoiceChoice.MALE) "male" else "female"}-$cached.pcm"
-                    val bytes=context.assets.open(path).use { it.readBytes() }
-                    val samples=ShortArray(bytes.size/2)
-                    ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(samples)
-                    output(samples)
+                    output(checkNotNull(cachedSamples))
                 } else {
                     // The JNI binding looks up invoke(float[]) on the concrete callback class.
                     // A Kotlin lambda only exposes invoke(Object) on some Android runtimes.
@@ -75,12 +81,12 @@ class SherpaSynthesizer(private val context:Context):SpeechSynthesizerAdapter {
                 audioFailure?.let { throw it }
                 if(epoch==generation.get()&&!closed) output(ShortArray(4800))
                 audioFailure?.let { throw it }
-                while(epoch==generation.get()&&!closed&&(audio.playbackHeadPosition.toLong() and 0xffffffffL)<written) {
+                while(epoch==generation.get()&&!closed&&
+                    (((audio.playbackHeadPosition.toLong() and 0xffffffffL)-playbackBase) and 0xffffffffL)<written) {
                     ensureActive(); delay(10)
                 }
             } finally {
-                if(track===audio) track=null
-                runCatching { audio.pause();audio.flush() };audio.release()
+                if(epoch!=generation.get() || closed) runCatching { audio.pause();audio.flush() }
             }
         }
     }
@@ -88,11 +94,20 @@ class SherpaSynthesizer(private val context:Context):SpeechSynthesizerAdapter {
     override fun close() {
         if(closed) return
         closed=true;stop()
-        executor.execute { model?.release();model=null }
+        executor.execute { model?.release();model=null;track?.release();track=null }
         executor.shutdown()
     }
     companion object {
         const val SPEECH_SPEED=1.0f
+        private fun createAudioTrack():AudioTrack {
+            val minimum=AudioTrack.getMinBufferSize(24000,AudioFormat.CHANNEL_OUT_MONO,AudioFormat.ENCODING_PCM_16BIT)
+            return AudioTrack.Builder().setAudioAttributes(AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ASSISTANCE_ACCESSIBILITY).setContentType(AudioAttributes.CONTENT_TYPE_SPEECH).build())
+                .setAudioFormat(AudioFormat.Builder().setSampleRate(24000).setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
+                    .setEncoding(AudioFormat.ENCODING_PCM_16BIT).build())
+                .setBufferSizeInBytes(maxOf(minimum,24000)).setTransferMode(AudioTrack.MODE_STREAM).build()
+                .also { check(it.state==AudioTrack.STATE_INITIALIZED) }
+        }
         /** Only frontend dictionaries need real paths. Large weights are read directly from the APK. */
         suspend fun prepareConfig(context:Context):OfflineTtsConfig=withContext(Dispatchers.IO) {
             val assets="assistant/tts"
