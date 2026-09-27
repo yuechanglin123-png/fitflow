@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -28,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.fitflow.training.data.WorkoutRepository
 import com.fitflow.training.catalog.CatalogRepository
@@ -56,6 +58,9 @@ internal fun CheckInEditor(
         mutableStateOf<Map<String, Int>?>(initial?.completedBlockSets ?: if (initial == null) emptyMap() else null)
     }
     var enteredLegacyExercises by remember(date, initial) { mutableStateOf(emptySet<String>()) }
+    // Keep editable text separate from persisted numbers so clearing a field is possible.
+    var completedInputs by remember(date, initial) { mutableStateOf(emptyMap<String, String>()) }
+    var restInputs by remember(date, initial) { mutableStateOf(emptyMap<String, String>()) }
     var addingExercise by remember { mutableStateOf(false) }
     var exerciseName by remember { mutableStateOf("") }
     var editingBlock by remember { mutableStateOf<Pair<String, PlannedBlock>?>(null) }
@@ -92,11 +97,14 @@ internal fun CheckInEditor(
                     Text("${index + 1}. $name", fontWeight = FontWeight.Bold)
                     val total = exercise.blocks.sumOf { it.sets }
                     val completed = exercise.blocks.sumOf { completedBlockSets?.get(it.id) ?: 0 }
+                    val completedText = completedInputs[exercise.id] ?: if (completedBlockSets == null ||
+                        (initial?.completedBlockSets == null && initial != null && exercise.id !in enteredLegacyExercises)
+                    ) "" else completed.toString()
+                    val restText = restInputs[exercise.id] ?: exercise.exerciseRestSeconds.toString()
                     OutlinedTextField(
-                        value = if (completedBlockSets == null ||
-                            (initial?.completedBlockSets == null && initial != null && exercise.id !in enteredLegacyExercises)
-                        ) "" else completed.toString(),
+                        value = completedText,
                         onValueChange = { text ->
+                            completedInputs = completedInputs + (exercise.id to text)
                             text.toIntOrNull()?.takeIf { it in 0..total }?.let { group ->
                                 val blockIds = exercise.blocks.map { it.id }.toSet()
                                 val replacement = CheckInRules.progressFromCompletedGroups(
@@ -107,17 +115,24 @@ internal fun CheckInEditor(
                             }
                         },
                         label = { Text("已完成到第几组（共 $total 组）") },
+                        enabled = total > 0,
+                        isError = exercise.id in completedInputs && completedText.toIntOrNull()?.let { it in 0..total } != true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
                     )
+                    if (total == 0) Text("请先添加训练小卡，再填写完成组数")
                     OutlinedTextField(
-                        value = exercise.exerciseRestSeconds.toString(),
+                        value = restText,
                         onValueChange = { text ->
+                            restInputs = restInputs + (exercise.id to text)
                             text.toIntOrNull()?.takeIf { it in 0..3600 }?.let { seconds ->
                                 plan = plan.copy(exercises = plan.exercises.map { if (it.id == exercise.id) it.copy(exerciseRestSeconds = seconds) else it })
                             }
                         },
                         label = { Text("动作间休息（秒）") },
+                        isError = restText.toIntOrNull()?.let { it in 0..3600 } != true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
                     )
@@ -133,6 +148,7 @@ internal fun CheckInEditor(
                                             if (it.id == exercise.id) it.copy(blocks = it.blocks.filterNot { candidate -> candidate.id == block.id }) else it
                                         })
                                         completedBlockSets = completedBlockSets?.minus(block.id)
+                                        completedInputs = completedInputs - exercise.id
                                     }) { Text("删除小卡") }
                                 }
                             }
@@ -146,21 +162,41 @@ internal fun CheckInEditor(
                             plan = plan.copy(exercises = plan.exercises.filterNot { it.id == exercise.id })
                             completedBlockSets = completedBlockSets?.filterKeys { id -> exercise.blocks.none { it.id == id } }
                             enteredLegacyExercises = enteredLegacyExercises - exercise.id
+                            completedInputs = completedInputs - exercise.id
+                            restInputs = restInputs - exercise.id
                         }) { Text("删除动作") }
                     }
                 }
             }
         }
         TextButton(onClick = { exerciseName = ""; addingExercise = true }) { Text("添加训练动作") }
-        val completedIds = if (completedBlockSets == null) initial?.completedExerciseIds.orEmpty()
+        // Re-evaluate drafts against the current cards (cards may have been added after typing).
+        val entryProgress = plan.exercises.fold(completedBlockSets) { progress, exercise ->
+            val group = completedInputs[exercise.id]?.toIntOrNull()
+            if (group == null || group !in 0..exercise.blocks.sumOf { it.sets }) progress
+            else progress.orEmpty() + CheckInRules.progressFromCompletedGroups(
+                WorkoutPlan(date, listOf(exercise)), mapOf(exercise.id to group),
+            )
+        }
+        val completedIds = if (entryProgress == null) initial?.completedExerciseIds.orEmpty()
             else plan.exercises.filter { exercise ->
-                exercise.blocks.any { (completedBlockSets?.get(it.id) ?: 0) > 0 }
+                exercise.blocks.any { (entryProgress[it.id] ?: 0) > 0 }
             }.mapNotNull { it.exerciseId }
-        val entry = CheckIn(date, completedIds, plan, category, completedBlockSets)
+        val entry = CheckIn(date, completedIds, plan, category, entryProgress)
         val allowUnknown = initial != null && initial.completedBlockSets == null && completedBlockSets == null
         val validation = CheckInRules.validateBackfill(entry, allowUnknownProgress = allowUnknown)
         val completeLegacyInput = initial?.completedBlockSets != null || initial == null ||
             completedBlockSets == null || plan.exercises.all { it.id in enteredLegacyExercises }
+        val inputError = plan.exercises.firstNotNullOfOrNull { exercise ->
+            val total = exercise.blocks.sumOf { it.sets }
+            when {
+                exercise.id in completedInputs && completedInputs[exercise.id]?.toIntOrNull()?.let { it in 0..total } != true ->
+                    "完成组数请输入 0～$total 的整数"
+                exercise.id in restInputs && restInputs[exercise.id]?.toIntOrNull()?.let { it in 0..3600 } != true ->
+                    "动作间休息请输入 0～3600 秒的整数"
+                else -> null
+            }
+        }
         error?.let { Text(it, color = MaterialTheme.colorScheme.error) }
         Button(
             onClick = {
@@ -174,10 +210,11 @@ internal fun CheckInEditor(
                     } finally { saving = false }
                 }
             },
-            enabled = validation.valid && completeLegacyInput && !saving,
+            enabled = validation.valid && completeLegacyInput && inputError == null && !saving,
             modifier = Modifier.fillMaxWidth(),
         ) { Text("保存打卡") }
-        if (!validation.valid) Text(validation.errors.first(), color = MaterialTheme.colorScheme.error)
+        if (inputError != null) Text(inputError, color = MaterialTheme.colorScheme.error)
+        else if (!validation.valid) Text(validation.errors.first(), color = MaterialTheme.colorScheme.error)
         else if (!completeLegacyInput) Text("请填写每个动作完成到第几组", color = MaterialTheme.colorScheme.error)
     }
 

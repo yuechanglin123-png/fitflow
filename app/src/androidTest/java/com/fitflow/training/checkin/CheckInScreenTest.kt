@@ -8,6 +8,8 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTextReplacement
+import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import android.content.Context
@@ -27,6 +29,54 @@ import org.junit.Assert.assertEquals
 @RunWith(AndroidJUnit4::class)
 class CheckInScreenTest {
     @get:Rule val rule = createComposeRule()
+
+    private fun openNumericEditor(onSaved: suspend () -> Unit = {}) {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val date = LocalDate.now().minusDays(1)
+        val plan = WorkoutPlan(date, listOf(PlannedExercise("input-action", null, "输入测试", listOf(
+            PlannedBlock("input-set", BigDecimal.TEN, 1, 8, 60, ""),
+        ), exerciseRestSeconds = 120)))
+        rule.setContent {
+            CheckInEditor(date, CheckIn(date, emptyList(), plan, TrainingCategory.STRENGTH,
+                mapOf("input-set" to 0)), WorkoutRepository.open(context),
+                com.fitflow.training.catalog.CatalogRepository.load(context), {}, onSaved)
+        }
+    }
+
+    @Test fun completedGroupsCanBeClearedAndRetyped() {
+        openNumericEditor()
+        val field = rule.onNodeWithText("已完成到第几组（共 1 组）")
+        field.performTextReplacement("")
+        field.assertTextEquals("已完成到第几组（共 1 组）", "")
+        rule.onNodeWithText("保存打卡").performScrollTo().assertIsNotEnabled()
+        field.performScrollTo().performTextInput("1")
+        field.assertTextEquals("已完成到第几组（共 1 组）", "1")
+    }
+
+    @Test fun exerciseRestCanDeleteEveryDigitAndRetype() {
+        openNumericEditor()
+        val field = rule.onNodeWithText("动作间休息（秒）")
+        field.performTextReplacement("1")
+        field.performTextReplacement("")
+        field.assertTextEquals("动作间休息（秒）", "")
+        rule.onNodeWithText("保存打卡").performScrollTo().assertIsNotEnabled()
+        field.performScrollTo().performTextInput("90")
+        field.assertTextEquals("动作间休息（秒）", "90")
+    }
+
+    @Test fun completedGroupsAreSavedAfterAddingTheMissingCard() {
+        val saved = java.util.concurrent.atomic.AtomicBoolean(false)
+        openNumericEditor { saved.set(true) }
+        rule.onNodeWithText("已完成到第几组（共 1 组）").performTextReplacement("2")
+        rule.onNodeWithText("保存打卡").performScrollTo().assertIsNotEnabled()
+        rule.onNodeWithText("添加训练小卡").performScrollTo().performClick()
+        rule.onNodeWithText("保存").performClick()
+        rule.onNodeWithText("保存打卡").performScrollTo().performClick()
+        val repository = WorkoutRepository.open(ApplicationProvider.getApplicationContext<Context>())
+        rule.waitUntil(10_000) { saved.get() }
+        val entry = runBlocking { repository.listCheckIns().first { it.date == LocalDate.now().minusDays(1) } }
+        assertEquals(2, CheckInRules.completedSets(entry))
+    }
 
     private fun selectDate(date: LocalDate) {
         if (YearMonth.from(date) != YearMonth.now()) rule.onNodeWithText("上个月").performClick()
@@ -71,11 +121,16 @@ class CheckInScreenTest {
         rule.onNodeWithText("添加").performClick()
         rule.onNodeWithText("添加训练小卡").performClick()
         rule.onNodeWithText("保存").performClick()
-        rule.onNodeWithText("已完成到第几组（共 1 组）").performTextReplacement("1")
+        rule.onNodeWithText("已完成到第几组（共 1 组）").performTextReplacement("")
+        rule.onNodeWithText("已完成到第几组（共 1 组）").performTextInput("1")
+        rule.onNodeWithText("动作间休息（秒）").performTextReplacement("")
+        rule.onNodeWithText("动作间休息（秒）").performTextInput("90")
         rule.onNodeWithText("保存打卡").performScrollTo().performClick()
         rule.waitUntil(10_000) { rule.onAllNodesWithText("训练完成度：1 / 1 组（100%）").fetchSemanticsNodes().isNotEmpty() }
         rule.onNodeWithText("打卡类别：徒手训练").assertExists()
         rule.onNodeWithText("引体向上").assertExists()
+        val saved = runBlocking { WorkoutRepository.open(ApplicationProvider.getApplicationContext<Context>()).listCheckIns().first { it.date == date } }
+        assertEquals(90, saved.planSnapshot.exercises.single().exerciseRestSeconds)
     }
 
     @Test fun editingLegacyRecordPreservesUnknownProgress() {
